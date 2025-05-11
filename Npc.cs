@@ -13,14 +13,20 @@ namespace FantasyPopulationSimulator.Console
             _pop = pop;
 
             _mother = mother;
-            _race = _mother._race.CreatesChildrenOfRace();
             _father = father;
+
+            _race = _mother._race.CreatesChildrenOfRace();
+            
+            Culture = _mother.Culture;   // todo: matrilineal or patrilineal culture?
+
         }
 
-        public Npc(PopulationTracker pop, IRace race)
+        public Npc(PopulationTracker pop, IRace race, ICulture culture)
         {
             _pop = pop;
             _race = race;
+            Culture = culture;
+            
         }
 
         private readonly IRace _race;
@@ -28,6 +34,7 @@ namespace FantasyPopulationSimulator.Console
         private Npc? _mother { get; set; } = null;
         private Npc? _father { get; set; } = null;
 
+        public ICulture Culture { get; set; } = null;
 
         public string FirstName { get; set; } = string.Empty;
         public string? LastName { get; set; } // todo: make last name not nullable
@@ -59,24 +66,26 @@ namespace FantasyPopulationSimulator.Console
 
         public void Tick(long today)
         {
-            if (AgeInDays >= _race.DiesAtAge)
+            if (TimeToDie(today))
             {
-                System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
-                _pop.RemoveNpc(this);
+                Die();
                 return;
             }
 
-            if (BirthDay() == today % Constants.DaysInYear)
-                System.Console.WriteLine($"Happy Birthday {FirstName}!");
-
-
-            bool readyToGiveBirth = CanGiveBirthToday(today);
-            if (readyToGiveBirth) GiveBirth(today);
-
+            if (BirthDay() == today % Constants.DaysInYear) System.Console.WriteLine($"Happy Birthday {FirstName}!");
+            if (CanGiveBirthToday(today)) GiveBirth(today);
             if (CanGetPregnant(today)) Impregnate(today);
 
             AgeInDays++;
         }
+
+        private void Die()
+        {
+            System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
+            _pop.RemoveNpc(this);
+        }
+
+        private bool TimeToDie(long today) => AgeInDays >= _race.DiesAtAge;
 
         private bool CanGiveBirthToday(long today) => 
             IsPregnant() && today >= _lastImpregnatedOn + _race.PregnancyDurationInDays;
@@ -84,8 +93,8 @@ namespace FantasyPopulationSimulator.Console
         private void GiveBirth(long day)
         {
             ResetPregnancy(day);
-            System.Console.WriteLine($"{FirstName} {LastName} Had a baby!");
-            _pop.GenerateNewNpc(this, null, day); //todo: how do we determine who the father is?
+            
+            _pop.GenerateNewNpc(this, null, day); //todo: determine who the father is?
         }
 
         private bool CanGetPregnant(long today)   // todo: verify that a mate is nearby?

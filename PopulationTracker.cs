@@ -20,7 +20,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateAdam()
         {
-            var adam = new Npc(this, new Human());
+            var adam = new Npc(this, new Human(), new DefaultCulture(_rand));
 
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * Constants.DaysInYear;
@@ -32,7 +32,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateEve()
         {
-            var eve = new Npc(this, new Human());
+            var eve = new Npc(this, new Human(), new DefaultCulture(_rand));
 
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * Constants.DaysInYear;
@@ -46,16 +46,21 @@ namespace FantasyPopulationSimulator.Console
         {
             var newNpc = new Npc(this, mother, father);
 
-            Sex newSex = GenerateNewbornSex();
+            newNpc.Sex = GenerateNewbornSex();
 
-            newNpc.Sex = newSex;
+            string newName = Guid.NewGuid().ToString();
 
-            newNpc.FirstName = Guid.NewGuid().ToString();       //todo: better name generation
-            newNpc.LastName = father?.LastName;                 //todo: better last name generation
+            if (newNpc.Sex == Sex.Male) newName = mother.Culture.GetRandomMaleName();
+            if (newNpc.Sex == Sex.Female) newName = mother.Culture.GetRandomFemaleName();
+
+            newNpc.FirstName = newName;
+                                                                //todo: better name generation
+            newNpc.LastName = father?.LastName;                 //todo: better last name generation;  and culture = matrilineal vs patrilineal?
             newNpc.AgeInDays = 0;
             newNpc.BirthDate = day;
 
             Tickables.Add(newNpc);
+            System.Console.WriteLine($"{mother.FirstName} had a baby named {newNpc.FirstName}!");
         }
 
         private Sex GenerateNewbornSex()

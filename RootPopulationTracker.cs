@@ -1,18 +1,21 @@
 ﻿
+
 namespace FantasyPopulationSimulator.Console
 {
     public class RootPopulationTracker : ITicker, ITickable
     {
-        private RandomNumberGenerator _rand;
+        private readonly RandomNumberGenerator _rand;
+        private readonly ConsoleUI _ui;
 
-        public RootPopulationTracker(RandomNumberGenerator rand)
+        public RootPopulationTracker(RandomNumberGenerator rand, ConsoleUI ui)
         {
             _rand = rand;
+            _ui = ui;
         }
 
         public PopulationTracker CreateChildForZone(IZone zone)
         {
-            var returnable = new PopulationTracker(_rand, zone);
+            var returnable = new PopulationTracker(_rand, zone, _ui);
             Add(returnable);
             return returnable;
         }
@@ -43,5 +46,10 @@ namespace FantasyPopulationSimulator.Console
             }
             return sum;
         }
+
+
+        public List<ITickable> GetChildren() => Tickables.ToList();
+
+        public string GetAssignedZoneName() => "Root";
     }
 }

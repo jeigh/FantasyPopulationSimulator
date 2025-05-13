@@ -8,11 +8,13 @@ namespace FantasyPopulationSimulator.Console
     {
         private RandomNumberGenerator _rand;
         private IZone _assignedZone;
+        private ConsoleUI _ui;
 
-        public PopulationTracker(RandomNumberGenerator rand, IZone zone)
+        public PopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui)
         {
             _rand = rand;
             _assignedZone = zone;
+            _ui = ui;
         }
 
         private List<ITickable> Tickables { get; set; } = new List<ITickable>();
@@ -21,7 +23,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateNewNpc(Npc mother, Npc father, long day)
         {
-            var newNpc = new Npc(this, mother, father);
+            var newNpc = new Npc(this, mother, father, _ui);
 
             newNpc.Sex = GenerateNewbornSex();
 
@@ -37,7 +39,7 @@ namespace FantasyPopulationSimulator.Console
             newNpc.BirthDate = day;
 
             Tickables.Add(newNpc);
-            //System.Console.WriteLine($"{mother.FirstName} had a baby named {newNpc.FirstName}!");
+            _ui.NpcBirth(mother.FirstName, newNpc.FirstName);
         }
 
         private Sex GenerateNewbornSex()
@@ -86,5 +88,6 @@ namespace FantasyPopulationSimulator.Console
 
             return sum;
         }
+        public string GetAssignedZoneName() => _assignedZone.ZoneName;
     }
 }

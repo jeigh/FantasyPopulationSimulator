@@ -7,28 +7,30 @@ namespace FantasyPopulationSimulator.Console
     public class Npc : ITickable
     {
         private readonly PopulationTracker _pop;
+        private readonly ConsoleUI _ui;
 
-        public Npc(PopulationTracker pop, Npc mother, Npc? father)
+        public Npc(PopulationTracker pop, Npc mother, Npc? father, ConsoleUI ui)
         {
             _pop = pop;
+            _ui = ui;
 
             _mother = mother;
             _father = father;
 
             _race = _mother._race.CreatesChildrenOfRace();
             
-            Culture = _mother.Culture;   // todo: matrilineal or patrilineal culture?
-            _currentZone = _mother.GetCurrentZone(); // todo: matrilineal or patrilineal zone?
+            Culture = _mother.Culture;                  // todo: matrilineal or patrilineal culture?
+            _currentZone = _mother.GetCurrentZone();    // todo: matrilineal or patrilineal zone?
 
         }
 
-        public Npc(PopulationTracker pop, IRace race, ICulture culture, IZone currentZone)
+        public Npc(PopulationTracker pop, IRace race, ICulture culture, IZone currentZone, ConsoleUI ui)
         {
             _pop = pop;
             _race = race;
             Culture = culture;
             _currentZone = currentZone;
-
+            _ui = ui;
         }
 
         private readonly IRace _race;
@@ -75,7 +77,7 @@ namespace FantasyPopulationSimulator.Console
                 return;
             }
 
-            //if (BirthDay() == today % Constants.DaysInYear) System.Console.WriteLine($"Happy Birthday {FirstName}!");
+            if (BirthDay() == today % Constants.DaysInYear) _ui.NpcBirthday();
             if (CanGiveBirthToday(today)) GiveBirth(today);
             if (CanGetPregnant(today)) Impregnate(today);
 
@@ -84,7 +86,7 @@ namespace FantasyPopulationSimulator.Console
 
         private void Die()
         {
-            //System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
+            _ui.NpcDeath();
             _pop.Remove(this);
         }
 
@@ -108,9 +110,15 @@ namespace FantasyPopulationSimulator.Console
                 _lastPregnancyEnded + _race.TimeBetweenPregnancies <= today);
         }
 
-        public IRace GetRaceOfChildren() => _race.CreatesChildrenOfRace();  // todo: when two parents arent of the same race?
+        public IRace GetRaceOfChildren() => 
+            _race.CreatesChildrenOfRace();  // todo: when two parents arent of the same race?
 
         public long GetNpcCount() => 1;
+
+        public string GetAssignedZoneName()
+        {
+            return string.Empty; // violation of liskov substitution principle
+        }
     }
 
 }

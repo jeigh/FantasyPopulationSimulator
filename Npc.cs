@@ -18,15 +18,17 @@ namespace FantasyPopulationSimulator.Console
             _race = _mother._race.CreatesChildrenOfRace();
             
             Culture = _mother.Culture;   // todo: matrilineal or patrilineal culture?
+            _currentZone = _mother.GetCurrentZone(); // todo: matrilineal or patrilineal zone?
 
         }
 
-        public Npc(PopulationTracker pop, IRace race, ICulture culture)
+        public Npc(PopulationTracker pop, IRace race, ICulture culture, IZone currentZone)
         {
             _pop = pop;
             _race = race;
             Culture = culture;
-            
+            _currentZone = currentZone;
+
         }
 
         private readonly IRace _race;
@@ -41,8 +43,9 @@ namespace FantasyPopulationSimulator.Console
         public int AgeInDays { get; set; } = 0;
         public Sex Sex { get; set; } = Sex.None;
         public int BirthDay()  => (int)(BirthDate % Constants.DaysInYear);
-        
-        
+        private IZone _currentZone;
+        public IZone GetCurrentZone() => _currentZone;
+
         public long BirthDate { get; set; } = 0;
 
         private long _lastPregnancyEnded { get; set; } = 0;
@@ -64,7 +67,7 @@ namespace FantasyPopulationSimulator.Console
         }
 
 
-        public void Tick(long today)
+        public void BlockUntilTickCompletes(long today)
         {
             if (TimeToDie(today))
             {
@@ -82,7 +85,7 @@ namespace FantasyPopulationSimulator.Console
         private void Die()
         {
             //System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
-            _pop.RemoveNpc(this);
+            _pop.Remove(this);
         }
 
         private bool TimeToDie(long today) => AgeInDays >= _race.DiesAtAge;
@@ -106,6 +109,8 @@ namespace FantasyPopulationSimulator.Console
         }
 
         public IRace GetRaceOfChildren() => _race.CreatesChildrenOfRace();  // todo: when two parents arent of the same race?
+
+        public long GetNpcCount() => 1;
     }
 
 }

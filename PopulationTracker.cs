@@ -2,47 +2,22 @@
 
 namespace FantasyPopulationSimulator.Console
 {
-    public interface ITickable
-    {
-        void Tick(long day);
-    }
 
-    public class PopulationTracker
+
+    public class PopulationTracker : ITicker, ITickable
     {
         private RandomNumberGenerator _rand;
+        private IZone _assignedZone;
 
-        public PopulationTracker(RandomNumberGenerator rand)
+        public PopulationTracker(RandomNumberGenerator rand, IZone zone)
         {
             _rand = rand;
+            _assignedZone = zone;
         }
 
         private List<ITickable> Tickables { get; set; } = new List<ITickable>();
 
         public long NpcCount() => Tickables.Count;
-
-        public void GenerateAdam()
-        {
-            var adam = new Npc(this, new Human(), new DefaultCulture(_rand));
-
-            adam.FirstName = "Adam";
-            adam.AgeInDays = 16 * Constants.DaysInYear;
-            adam.BirthDate = -16 * Constants.DaysInYear + 36; 
-            adam.Sex = Sex.Male;
-
-            Tickables.Add(adam);
-        }
-
-        public void GenerateEve()
-        {
-            var eve = new Npc(this, new Human(), new DefaultCulture(_rand));
-
-            eve.FirstName = "Eve";
-            eve.AgeInDays = 16 * Constants.DaysInYear;
-            eve.BirthDate = -16 * Constants.DaysInYear + 17;
-            eve.Sex = Sex.Female;
-
-            Tickables.Add(eve);
-        }
 
         public void GenerateNewNpc(Npc mother, Npc father, long day)
         {
@@ -77,15 +52,39 @@ namespace FantasyPopulationSimulator.Console
             return newSex;
         }
 
-        public void RemoveNpc(Npc npc) =>
-            Tickables.Remove(npc);
+        public void Remove(ITickable tickable) =>
+            Tickables.Remove(tickable);
 
-        internal void TickPopulation(long day)
+        public void BlockUntilTickCompletes(long day)
         {
             foreach (ITickable n in Tickables.ToList())
             {
-                n.Tick(day);
+                n.BlockUntilTickCompletes(day);
             }
+        }
+
+        public void Add(ITickable tickable)
+        {
+            Tickables.Add(tickable);
+        }
+
+        public void TickPopulation(long day)
+        {
+            foreach (ITickable n in Tickables.ToList())
+            {
+                n.BlockUntilTickCompletes(day);
+            }
+        }
+
+        public long GetNpcCount()
+        {
+            long sum = 0;
+            foreach (ITickable n in Tickables.ToList())
+            {
+                sum += n.GetNpcCount();
+            }
+
+            return sum;
         }
     }
 }

@@ -19,10 +19,10 @@ namespace FantasyPopulationSimulator.Console
                 if (day % Constants.DaysInYear == 0)
                 {
                     int currentYear = (int)(day / Constants.DaysInYear);
-                    System.Console.WriteLine($"New Year Begins: {currentYear}");
-                    //System.Console.ReadKey();
+                    System.Console.Clear();
+                    System.Console.WriteLine($"Year: {currentYear}, NpcCount: {pop.NpcCount()}");
                 }
-
+                
                 pop.TickPopulation(day);
 
                 day++;

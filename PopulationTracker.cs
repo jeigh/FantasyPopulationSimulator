@@ -18,6 +18,8 @@ namespace FantasyPopulationSimulator.Console
 
         private List<ITickable> Tickables { get; set; } = new List<ITickable>();
 
+        public long NpcCount() => Tickables.Count;
+
         public void GenerateAdam()
         {
             var adam = new Npc(this, new Human(), new DefaultCulture(_rand));
@@ -60,7 +62,7 @@ namespace FantasyPopulationSimulator.Console
             newNpc.BirthDate = day;
 
             Tickables.Add(newNpc);
-            System.Console.WriteLine($"{mother.FirstName} had a baby named {newNpc.FirstName}!");
+            //System.Console.WriteLine($"{mother.FirstName} had a baby named {newNpc.FirstName}!");
         }
 
         private Sex GenerateNewbornSex()

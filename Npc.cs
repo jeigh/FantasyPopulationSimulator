@@ -72,7 +72,7 @@ namespace FantasyPopulationSimulator.Console
                 return;
             }
 
-            if (BirthDay() == today % Constants.DaysInYear) System.Console.WriteLine($"Happy Birthday {FirstName}!");
+            //if (BirthDay() == today % Constants.DaysInYear) System.Console.WriteLine($"Happy Birthday {FirstName}!");
             if (CanGiveBirthToday(today)) GiveBirth(today);
             if (CanGetPregnant(today)) Impregnate(today);
 
@@ -81,7 +81,7 @@ namespace FantasyPopulationSimulator.Console
 
         private void Die()
         {
-            System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
+            //System.Console.WriteLine($"{FirstName} {LastName} has died at age {AgeInDays}");
             _pop.RemoveNpc(this);
         }
 

@@ -1,28 +1,27 @@
 ﻿using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
 using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Interfaces;
 
 namespace FantasyPopulationSimulator.Console
 {
-
-    
-
     internal partial class Program
     {
 
         static void Main(string[] args)
         {
             var rand = new RandomNumberGenerator(12); // todo:  12 seems arbitrary?
-            
+
             var ui = new ConsoleUI();
-            var root = new RootPopulationTracker(rand, ui);
+            var popTracker = new RootPopulationTracker(rand, ui);
+            ZoneManagement zones = new ZoneManagement();
 
-            var firstZone = new Zone();
-            firstZone.ZoneName = "Eden";
+            var edenZone = zones.CreateNewZone("Eden");
+            var firstPop = popTracker.CreateTrackerForZone(edenZone);
 
-            var firstPop = root.CreateChildForZone(firstZone);
+            GenerateAdam(firstPop, rand, edenZone, ui);
+            GenerateEve(firstPop, rand, edenZone, ui);
 
-            GenerateAdam(firstPop, rand, firstZone, ui);
-            GenerateEve(firstPop, rand, firstZone, ui);
+            SetupEverquestThemedZones(popTracker, zones, edenZone);
 
             long day = 0;
             while (true)
@@ -35,16 +34,34 @@ namespace FantasyPopulationSimulator.Console
 
                     if (day % DaysInYear == 0)
                     {
-                        ui.EmitSummary(root, currentYear);
-                    }                    
+                        ui.EmitSummary(popTracker, currentYear);
+                    }
                 }
 
-                root.BlockUntilTickCompletes(day);
+                popTracker.BlockUntilTickCompletes(day);
 
                 day++;
             }
 
 
+        }
+
+        private static void SetupEverquestThemedZones(RootPopulationTracker popTracker, ZoneManagement zones, Zone edenZone)
+        {
+            Zone freeportZone = CreateAndTrackNewZone(popTracker, zones, "Freeport");
+            Zone desertOfRoZone = CreateAndTrackNewZone(popTracker, zones, "Desert Of Ro");
+            Zone eastCommonlandsZone = CreateAndTrackNewZone(popTracker, zones, "East Commonlands");
+
+            zones.AddAdjacentZone(edenZone, freeportZone, twoWayConnection: false);
+            zones.AddAdjacentZone(freeportZone, desertOfRoZone, twoWayConnection: true);
+            zones.AddAdjacentZone(freeportZone, eastCommonlandsZone, twoWayConnection: true);
+        }
+
+        private static Zone CreateAndTrackNewZone(RootPopulationTracker popTracker, ZoneManagement zones, string zoneName)
+        {
+            var newZone = zones.CreateNewZone(zoneName);
+            popTracker.CreateTrackerForZone(newZone);
+            return newZone;
         }
 
         public static void GenerateAdam(PopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui)
@@ -54,7 +71,7 @@ namespace FantasyPopulationSimulator.Console
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * DaysInYear;
             adam.BirthDate = -16 * DaysInYear + 36;
-            adam.Sex = Constants.Sex.Male;
+            adam.Sex = Sex.Male;
 
             pop.Add(adam);
         }
@@ -66,7 +83,7 @@ namespace FantasyPopulationSimulator.Console
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * DaysInYear;
             eve.BirthDate = -16 * DaysInYear + 17;
-            eve.Sex = Constants.Sex.Female;
+            eve.Sex = Sex.Female;
 
             pop.Add(eve);
         }

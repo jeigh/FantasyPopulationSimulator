@@ -15,7 +15,7 @@ namespace FantasyPopulationSimulator.Console
             _ui = ui;
         }
 
-        public PopulationTracker CreateChildForZone(IZone zone)
+        public PopulationTracker CreateTrackerForZone(IZone zone)
         {
             var returnable = new PopulationTracker(_rand, zone, _ui);
             Add(returnable);
@@ -33,10 +33,14 @@ namespace FantasyPopulationSimulator.Console
 
         public void BlockUntilTickCompletes(long day)
         {
+            var tasks = new List<Task>();
+
             foreach (ITickable n in Tickables.ToList())
             {
-                n.BlockUntilTickCompletes(day);
+                tasks.Add(Task.Run(() => n.BlockUntilTickCompletes(day)));
             }
+
+            Task.WaitAll(tasks.ToArray());
         }
 
         public long GetNpcCount()

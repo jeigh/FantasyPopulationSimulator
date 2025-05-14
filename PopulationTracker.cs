@@ -1,4 +1,6 @@
-﻿using static FantasyPopulationSimulator.Console.Program;
+﻿using FantasyPopulationSimulator.Console.Interfaces;
+using static FantasyPopulationSimulator.Console.Program;
+using FantasyPopulationSimulator.Console.Constants;
 
 namespace FantasyPopulationSimulator.Console
 {

@@ -1,4 +1,6 @@
-﻿namespace FantasyPopulationSimulator.Console
+﻿using FantasyPopulationSimulator.Console.Interfaces;
+
+namespace FantasyPopulationSimulator.Console
 {
     public class DefaultCulture : ICulture
     {

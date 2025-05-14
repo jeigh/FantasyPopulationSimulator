@@ -1,6 +1,7 @@
-﻿
+﻿using FantasyPopulationSimulator.Console.Interfaces;
+using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
+using FantasyPopulationSimulator.Console.Constants;
 
-using static FantasyPopulationSimulator.Console.Program;
 
 namespace FantasyPopulationSimulator.Console
 {
@@ -44,7 +45,7 @@ namespace FantasyPopulationSimulator.Console
         public string? LastName { get; set; } // todo: make last name not nullable
         public int AgeInDays { get; set; } = 0;
         public Sex Sex { get; set; } = Sex.None;
-        public int BirthDay()  => (int)(BirthDate % Constants.DaysInYear);
+        public int BirthDay()  => (int)(BirthDate % DaysInYear);
         private IZone _currentZone;
         public IZone GetCurrentZone() => _currentZone;
 
@@ -77,7 +78,7 @@ namespace FantasyPopulationSimulator.Console
                 return;
             }
 
-            if (BirthDay() == today % Constants.DaysInYear) _ui.NpcBirthday();
+            if (BirthDay() == today % DaysInYear) _ui.NpcBirthday();
             if (CanGiveBirthToday(today)) GiveBirth(today);
             if (CanGetPregnant(today)) Impregnate(today);
 
@@ -104,7 +105,7 @@ namespace FantasyPopulationSimulator.Console
 
         private bool CanGetPregnant(long today)   // todo: verify that a mate is nearby?
         {
-            return (Sex == Sex.Female &&
+            return (Sex == Constants.Sex.Female &&
                 IsFertile() && 
                 !IsPregnant() &&
                 _lastPregnancyEnded + _race.TimeBetweenPregnancies <= today);

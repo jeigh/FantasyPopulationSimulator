@@ -1,5 +1,7 @@
 ﻿
 
+using FantasyPopulationSimulator.Console.Interfaces;
+
 namespace FantasyPopulationSimulator.Console
 {
     public class RootPopulationTracker : ITicker, ITickable

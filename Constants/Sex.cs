@@ -1,4 +1,4 @@
-﻿namespace FantasyPopulationSimulator.Console
+﻿namespace FantasyPopulationSimulator.Console.Constants
 {
     public enum Sex
     {

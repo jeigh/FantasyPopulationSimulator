@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Interfaces
 {
 
     public interface IRace

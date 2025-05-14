@@ -1,6 +1,10 @@
-﻿
+﻿using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
+using FantasyPopulationSimulator.Console.Constants;
+
 namespace FantasyPopulationSimulator.Console
 {
+
+    
 
     internal partial class Program
     {
@@ -23,13 +27,13 @@ namespace FantasyPopulationSimulator.Console
             long day = 0;
             while (true)
             {
-                if (day % Constants.DaysInYear == 0)
+                if (day % DaysInYear == 0)
                 {
-                    int currentYear = (int)(day / Constants.DaysInYear);
+                    int currentYear = (int)(day / DaysInYear);
                     ui.Clear();
                     //ui.DeclareYear(currentYear, root.GetNpcCount());
 
-                    if (day % Constants.DaysInYear == 0)
+                    if (day % DaysInYear == 0)
                     {
                         ui.EmitSummary(root, currentYear);
                     }                    
@@ -48,9 +52,9 @@ namespace FantasyPopulationSimulator.Console
             var adam = new Npc(pop, new Human(), new DefaultCulture(_rand), currentZone, ui);
 
             adam.FirstName = "Adam";
-            adam.AgeInDays = 16 * Constants.DaysInYear;
-            adam.BirthDate = -16 * Constants.DaysInYear + 36;
-            adam.Sex = Sex.Male;
+            adam.AgeInDays = 16 * DaysInYear;
+            adam.BirthDate = -16 * DaysInYear + 36;
+            adam.Sex = Constants.Sex.Male;
 
             pop.Add(adam);
         }
@@ -60,9 +64,9 @@ namespace FantasyPopulationSimulator.Console
             var eve = new Npc(pop, new Human(), new DefaultCulture(_rand), currentZone, ui);
 
             eve.FirstName = "Eve";
-            eve.AgeInDays = 16 * Constants.DaysInYear;
-            eve.BirthDate = -16 * Constants.DaysInYear + 17;
-            eve.Sex = Sex.Female;
+            eve.AgeInDays = 16 * DaysInYear;
+            eve.BirthDate = -16 * DaysInYear + 17;
+            eve.Sex = Constants.Sex.Female;
 
             pop.Add(eve);
         }

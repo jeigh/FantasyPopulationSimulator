@@ -33,13 +33,15 @@ namespace FantasyPopulationSimulator.Console
             Tickables.Add(tickable);
 
 
-        public void BlockUntilTickCompletes(ChildPopulationTracker pop, long day)
+
+
+        public void BlockUntilTickCompletes(long day)
         {
             var tasks = new List<Task>();
 
             foreach (ITickable n in Tickables.ToList())
             {
-                tasks.Add(Task.Run(() => n.BlockUntilTickCompletes(pop, day)));
+                tasks.Add(Task.Run(() => n.BlockUntilTickCompletes(day)));
             }
 
             Task.WaitAll(tasks.ToArray());

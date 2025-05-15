@@ -10,19 +10,16 @@ namespace FantasyPopulationSimulator.Console
         {
             var rand = new RandomNumberGenerator(12);           // todo:  12 seems arbitrary?
             var ui = new ConsoleUI();
-            var npcBehavior = new NpcBehavior(ui, rand);
-            var popTracker = new RootPopulationTracker(rand, ui, npcBehavior);            
+            var npcs = new NpcBehavior(ui, rand);
+            var popTracker = new RootPopulationTracker(rand, ui, npcs);
             var zones = new ZoneManagement();
 
-            var setup = new InitialSetupHelper(zones, popTracker);
+            var setup = new InitialSetupHelper(zones, popTracker, rand, ui, npcs);
 
-            var edenZone = zones.CreateNewZone("Eden");
-            var firstPop = popTracker.CreateTrackerForZone(edenZone);
+            Zone edenZone = setup.CreateStartingZoneForEden(popTracker, zones, "Eden");
+            Zone darkElfEden = setup.CreateStartingZoneForEden(popTracker, zones, "Dark Elf Eden");
 
-            setup.GenerateAdam(firstPop, rand, edenZone, ui, rand, npcBehavior);
-            setup.GenerateEve(firstPop, rand, edenZone, ui, rand, npcBehavior);
-
-            setup.SetupEverquestThemedZones(edenZone);
+            setup.SetupEverquestThemedZones(edenZone, darkElfEden);
 
             long day = 0;
             while (true)
@@ -36,10 +33,12 @@ namespace FantasyPopulationSimulator.Console
                     if (day % DaysInYear == 0) ui.EmitSummary(popTracker, currentYear);
                 }
 
-                popTracker.BlockUntilTickCompletes(firstPop, day);
+                popTracker.BlockUntilTickCompletes(day);
 
                 day++;
             }
         }
+
+
     }
 }

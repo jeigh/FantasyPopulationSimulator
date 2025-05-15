@@ -9,11 +9,14 @@ namespace FantasyPopulationSimulator.Console
         private readonly NpcBehavior _behavior;
         private readonly Npc? _mother;
         private readonly Npc? _father;
+        private readonly ChildPopulationTracker _tracker;
+
         private List<ITrait> Traits { get; set; } = new List<ITrait>();
 
-        public Npc(Npc mother, Npc? father, NpcBehavior behavior)
+        public Npc(Npc mother, Npc? father, NpcBehavior behavior, ChildPopulationTracker tracker)
         {
             _behavior = behavior;
+            _tracker = tracker;
 
             _mother = mother;
             _father = father;
@@ -24,9 +27,10 @@ namespace FantasyPopulationSimulator.Console
             CurrentZone = _mother.CurrentZone;    // todo: matrilineal or patrilineal zone?
         }
 
-        public Npc(IRace race, ICulture culture, IZone currentZone,  NpcBehavior behavior)
+        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, ChildPopulationTracker tracker)
         {
             _behavior = behavior;
+            _tracker = tracker;
 
             Race = race;
             Culture = culture;
@@ -48,9 +52,11 @@ namespace FantasyPopulationSimulator.Console
         public bool HasTrait(ITrait trait) => Traits.Contains(trait);        
         public long GetNpcCount() => 1;        
         public string GetAssignedZoneName() => 
-            string.Empty; // violation of liskov substitution principle        
-        public void BlockUntilTickCompletes(ChildPopulationTracker pop, long day) => 
-            _behavior.BlockUntilTickCompletes(pop, this, day);
+            string.Empty; // violation of liskov substitution principle
+                            
+        public void BlockUntilTickCompletes(long day) => 
+            _behavior.BlockUntilTickCompletes(_tracker, this, day);
+
     }
 
 }

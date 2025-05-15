@@ -2,7 +2,8 @@
 {
     public interface ITickable
     {
-        void BlockUntilTickCompletes(ChildPopulationTracker pop, long day);
+        void BlockUntilTickCompletes(long day);
+
         string GetAssignedZoneName();
         long GetNpcCount();
     }

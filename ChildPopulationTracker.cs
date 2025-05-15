@@ -28,9 +28,10 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateNewNpc(Npc mother, Npc? father, long day)
         {
-            var newNpc = new Npc(mother, father, _behavior);
+            var newNpc = new Npc(mother, father, _behavior, this);
 
             newNpc.Sex = GenerateNewbornSex();
+
 
             string newName = Guid.NewGuid().ToString();
 
@@ -66,7 +67,7 @@ namespace FantasyPopulationSimulator.Console
         {
             foreach (ITickable n in Tickables.ToList())
             {
-                n.BlockUntilTickCompletes(this, day);
+                n.BlockUntilTickCompletes(day);
             }
         }
 
@@ -87,13 +88,7 @@ namespace FantasyPopulationSimulator.Console
         }
         public string GetAssignedZoneName() => _assignedZone.ZoneName;
 
-        public void BlockUntilTickCompletes(ChildPopulationTracker pop, long day)
-        {
-            foreach (ITickable n in Tickables.ToList())
-            {
-                n.BlockUntilTickCompletes(this, day);
-            }
-        }
+
 
 
     }

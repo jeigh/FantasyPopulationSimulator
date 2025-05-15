@@ -10,22 +10,32 @@ namespace FantasyPopulationSimulator.Console
     {
         private readonly ZoneManagement _zones;
         private readonly RootPopulationTracker _root;
+        private readonly RandomNumberGenerator _rand;
+        private readonly ConsoleUI _ui;
+        private readonly NpcBehavior _npcs;
 
-        public InitialSetupHelper(ZoneManagement zones, RootPopulationTracker root)
+        public InitialSetupHelper(ZoneManagement zones, RootPopulationTracker root, RandomNumberGenerator rand, ConsoleUI ui, NpcBehavior npcs)
         {
             _zones = zones;
             _root = root;
+            _rand = rand;
+            _ui = ui;
+            _npcs = npcs;
         }
 
-        public void SetupEverquestThemedZones(Zone edenZone)
+        public void SetupEverquestThemedZones(Zone edenZone, Zone darkElfEden)
         {
             Zone freeportZone = CreateAndTrackNewZone("Freeport");
             Zone desertOfRoZone = CreateAndTrackNewZone("Desert Of Ro");
             Zone eastCommonlandsZone = CreateAndTrackNewZone("East Commonlands");
+            Zone neriakZone = CreateAndTrackNewZone("Neriak");
+            Zone nektulosZone = CreateAndTrackNewZone("Nektulos Forest");
 
             _zones.AddAdjacentZone(edenZone, freeportZone, twoWayConnection: false);
             _zones.AddAdjacentZone(freeportZone, desertOfRoZone, twoWayConnection: true);
             _zones.AddAdjacentZone(freeportZone, eastCommonlandsZone, twoWayConnection: true);
+            _zones.AddAdjacentZone(eastCommonlandsZone, neriakZone, twoWayConnection: true);
+            _zones.AddAdjacentZone(darkElfEden, neriakZone, twoWayConnection: true);
         }
 
         public Zone CreateAndTrackNewZone(string zoneName)
@@ -35,9 +45,9 @@ namespace FantasyPopulationSimulator.Console
             return newZone;
         }
 
-        public void GenerateAdam(ChildPopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand, NpcBehavior npcBehavior)
+        public void GenerateAdam(ChildPopulationTracker pop, IZone currentZone)
         {
-            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, npcBehavior);
+            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
 
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * DaysInYear;
@@ -47,9 +57,9 @@ namespace FantasyPopulationSimulator.Console
             pop.Add(adam);
         }
 
-        public void GenerateEve(ChildPopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand, NpcBehavior behavior)
+        public void GenerateEve(ChildPopulationTracker pop, IZone currentZone)
         {
-            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, behavior);
+            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
 
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * DaysInYear;
@@ -57,6 +67,20 @@ namespace FantasyPopulationSimulator.Console
             eve.Sex = Sex.Female;
 
             pop.Add(eve);
+        }
+
+
+
+
+        public Zone CreateStartingZoneForEden(RootPopulationTracker popTracker, ZoneManagement zones, string zoneName)
+        {
+            var returnable = zones.CreateNewZone(zoneName);
+            var firstPop = popTracker.CreateTrackerForZone(returnable);
+
+            GenerateAdam(firstPop, returnable);
+            GenerateEve(firstPop, returnable);
+
+            return returnable;
         }
 
     }

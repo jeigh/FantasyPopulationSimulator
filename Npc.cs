@@ -1,7 +1,7 @@
 ﻿using FantasyPopulationSimulator.Console.Interfaces;
 using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
 using FantasyPopulationSimulator.Console.Constants;
-
+using FantasyPopulationSimulator.Console.Traits;
 
 namespace FantasyPopulationSimulator.Console
 {
@@ -9,11 +9,13 @@ namespace FantasyPopulationSimulator.Console
     {
         private readonly PopulationTracker _pop;
         private readonly ConsoleUI _ui;
+        private readonly RandomNumberGenerator _rand;
 
-        public Npc(PopulationTracker pop, Npc mother, Npc? father, ConsoleUI ui)
+        public Npc(PopulationTracker pop, Npc mother, Npc? father, ConsoleUI ui, RandomNumberGenerator rand)
         {
             _pop = pop;
             _ui = ui;
+            _rand = rand;
 
             _mother = mother;
             _father = father;
@@ -25,10 +27,11 @@ namespace FantasyPopulationSimulator.Console
 
         }
 
-        public Npc(PopulationTracker pop, IRace race, ICulture culture, IZone currentZone, ConsoleUI ui)
+        public Npc(PopulationTracker pop, IRace race, ICulture culture, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand)
         {
             _pop = pop;
             _race = race;
+            _rand = rand;
             Culture = culture;
             _currentZone = currentZone;
             _ui = ui;
@@ -81,9 +84,29 @@ namespace FantasyPopulationSimulator.Console
             if (BirthDay() == today % DaysInYear) _ui.NpcBirthday();
             if (CanGiveBirthToday(today)) GiveBirth(today);
             if (CanGetPregnant(today)) Impregnate(today);
+            if (IsAdult(today))
+            {
+                if (ProbabilityOfGettingANewTraitAtDay(AgeInDays) >= _rand.GeneratePercentage())
+                    GiveTrait(new WandererTrait());
+            }
 
             AgeInDays++;
         }
+
+        private List<ITrait> Traits { get; set; } = new List<ITrait>();
+
+        private void GiveTrait(ITrait trait) => Traits.Add(trait);
+
+        public bool HasTrait(ITrait trait) => Traits.Contains(trait);
+
+        // todo: use calculus to return what the equasion should be when the cdf (or more accurately, integral of f(g)) goes from
+        // f(g)=0 when g= (350*18) to f(g)=0.10 when g = (350*80) instead of just approximating a hard coded value
+        //
+        // using a hard coded value assumes an equal chance that someone will gain a trait throughout their life
+        // but I believe people are more likely to get their traits sooner in life
+        public double ProbabilityOfGettingANewTraitAtDay(int ageInDays) =>
+             0.00001f;   //small probability of occurring each day
+         
 
         private void Die()
         {
@@ -105,7 +128,7 @@ namespace FantasyPopulationSimulator.Console
 
         private bool CanGetPregnant(long today)   // todo: verify that a mate is nearby?
         {
-            return (Sex == Constants.Sex.Female &&
+            return (Sex == Sex.Female &&
                 IsFertile() && 
                 !IsPregnant() &&
                 _lastPregnancyEnded + _race.TimeBetweenPregnancies <= today);
@@ -116,10 +139,11 @@ namespace FantasyPopulationSimulator.Console
 
         public long GetNpcCount() => 1;
 
-        public string GetAssignedZoneName()
-        {
-            return string.Empty; // violation of liskov substitution principle
-        }
+        public string GetAssignedZoneName() => string.Empty; // violation of liskov substitution principle
+
+        public bool IsAdult(long today) =>
+            AgeInDays >= _race.AdulthoodBeginsAt;
+
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿using FantasyPopulationSimulator.Console.Interfaces;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Cultures
 {
     public class DefaultCulture : ICulture
     {

@@ -10,7 +10,7 @@ namespace FantasyPopulationSimulator.Console.Interfaces
         public int PregnancyDurationInDays { get; }
         long TimeBetweenPregnancies { get; set; }   //todo: make this based on a normal distribution instead of a fixed value
         int DiesAtAge { get; set; }                 // todo: make this based on a normal distribution instead of a fixed value
-
+        int AdulthoodBeginsAt { get; set;  }
         IRace CreatesChildrenOfRace();
     }
 

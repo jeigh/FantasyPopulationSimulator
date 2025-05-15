@@ -25,7 +25,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateNewNpc(Npc mother, Npc father, long day)
         {
-            var newNpc = new Npc(this, mother, father, _ui);
+            var newNpc = new Npc(this, mother, father, _ui, _rand);
 
             newNpc.Sex = GenerateNewbornSex();
 

@@ -8,16 +8,18 @@ namespace FantasyPopulationSimulator.Console
     {
         private readonly RandomNumberGenerator _rand;
         private readonly ConsoleUI _ui;
+        private readonly NpcBehavior _behavior;
 
-        public RootPopulationTracker(RandomNumberGenerator rand, ConsoleUI ui)
+        public RootPopulationTracker(RandomNumberGenerator rand, ConsoleUI ui, NpcBehavior behavior)
         {
             _rand = rand;
             _ui = ui;
+            _behavior = behavior;
         }
 
         public PopulationTracker CreateTrackerForZone(IZone zone)
         {
-            var returnable = new PopulationTracker(_rand, zone, _ui);
+            var returnable = new PopulationTracker(_rand, zone, _ui, _behavior);
             Add(returnable);
             return returnable;
         }
@@ -31,13 +33,13 @@ namespace FantasyPopulationSimulator.Console
             Tickables.Add(tickable);
 
 
-        public void BlockUntilTickCompletes(long day)
+        public void BlockUntilTickCompletes(IChildPopulationTracker pop, long day)
         {
             var tasks = new List<Task>();
 
             foreach (ITickable n in Tickables.ToList())
             {
-                tasks.Add(Task.Run(() => n.BlockUntilTickCompletes(day)));
+                tasks.Add(Task.Run(() => n.BlockUntilTickCompletes(pop, day)));
             }
 
             Task.WaitAll(tasks.ToArray());
@@ -57,5 +59,7 @@ namespace FantasyPopulationSimulator.Console
         public List<ITickable> GetChildren() => Tickables.ToList();
 
         public string GetAssignedZoneName() => "Root";
+
+
     }
 }

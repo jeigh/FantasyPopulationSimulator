@@ -11,17 +11,21 @@ namespace FantasyPopulationSimulator.Console
 
         static void Main(string[] args)
         {
-            var rand = new RandomNumberGenerator(12); // todo:  12 seems arbitrary?
+            var rand = new RandomNumberGenerator(12);           // todo:  12 seems arbitrary?
 
             var ui = new ConsoleUI();
-            var popTracker = new RootPopulationTracker(rand, ui);
+
+            var npcBehavior = new NpcBehavior(ui, rand);
+            var popTracker = new RootPopulationTracker(rand, ui, npcBehavior);
+
             ZoneManagement zones = new ZoneManagement();
 
             var edenZone = zones.CreateNewZone("Eden");
             var firstPop = popTracker.CreateTrackerForZone(edenZone);
 
-            GenerateAdam(firstPop, rand, edenZone, ui, rand);
-            GenerateEve(firstPop, rand, edenZone, ui, rand);
+
+            GenerateAdam(firstPop, rand, edenZone, ui, rand, npcBehavior);
+            GenerateEve(firstPop, rand, edenZone, ui, rand, npcBehavior);
 
             SetupEverquestThemedZones(popTracker, zones, edenZone);
 
@@ -37,7 +41,7 @@ namespace FantasyPopulationSimulator.Console
                     if (day % DaysInYear == 0) ui.EmitSummary(popTracker, currentYear);
                 }
 
-                popTracker.BlockUntilTickCompletes(day);
+                popTracker.BlockUntilTickCompletes(firstPop, day);
 
                 day++;
             }
@@ -61,9 +65,9 @@ namespace FantasyPopulationSimulator.Console
             return newZone;
         }
 
-        public static void GenerateAdam(PopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand)
+        public static void GenerateAdam(PopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand, NpcBehavior npcBehavior)
         {
-            var adam = new Npc(pop, new Human(), new DefaultCulture(_rand), currentZone, ui, rand);
+            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, npcBehavior);
 
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * DaysInYear;
@@ -73,9 +77,9 @@ namespace FantasyPopulationSimulator.Console
             pop.Add(adam);
         }
 
-        public static void GenerateEve(PopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand)
+        public static void GenerateEve(PopulationTracker pop, RandomNumberGenerator _rand, IZone currentZone, ConsoleUI ui, RandomNumberGenerator rand, NpcBehavior behavior)
         {
-            var eve = new Npc(pop, new Human(), new DefaultCulture(_rand), currentZone, ui, rand);
+            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, behavior);
 
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * DaysInYear;

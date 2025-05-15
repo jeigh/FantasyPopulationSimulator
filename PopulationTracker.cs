@@ -6,17 +6,20 @@ namespace FantasyPopulationSimulator.Console
 {
 
 
-    public class PopulationTracker : ITicker, ITickable
+    public class PopulationTracker : ITicker, ITickable, IChildPopulationTracker
     {
         private RandomNumberGenerator _rand;
         private IZone _assignedZone;
         private ConsoleUI _ui;
+        private NpcBehavior _behavior;
 
-        public PopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui)
+        public PopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior)
         {
+            _behavior = behavior;
             _rand = rand;
             _assignedZone = zone;
             _ui = ui;
+            _behavior = behavior;
         }
 
         private List<ITickable> Tickables { get; set; } = new List<ITickable>();
@@ -25,7 +28,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void GenerateNewNpc(Npc mother, Npc father, long day)
         {
-            var newNpc = new Npc(this, mother, father, _ui, _rand);
+            var newNpc = new Npc(mother, father, _behavior);
 
             newNpc.Sex = GenerateNewbornSex();
 
@@ -63,7 +66,7 @@ namespace FantasyPopulationSimulator.Console
         {
             foreach (ITickable n in Tickables.ToList())
             {
-                n.BlockUntilTickCompletes(day);
+                n.BlockUntilTickCompletes(this, day);
             }
         }
 
@@ -76,7 +79,7 @@ namespace FantasyPopulationSimulator.Console
         {
             foreach (ITickable n in Tickables.ToList())
             {
-                n.BlockUntilTickCompletes(day);
+                n.BlockUntilTickCompletes(this, day);
             }
         }
 
@@ -91,5 +94,9 @@ namespace FantasyPopulationSimulator.Console
             return sum;
         }
         public string GetAssignedZoneName() => _assignedZone.ZoneName;
+
+        public void BlockUntilTickCompletes(IChildPopulationTracker pop, long day) => 
+            this.BlockUntilTickCompletes(day);
+
     }
 }

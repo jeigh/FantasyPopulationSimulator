@@ -2,6 +2,7 @@
 
 namespace FantasyPopulationSimulator.Console.Cultures
 {
+
     public class DefaultCulture : ICulture
     {
         private RandomNumberGenerator _rand;

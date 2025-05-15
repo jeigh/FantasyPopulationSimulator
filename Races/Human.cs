@@ -12,8 +12,5 @@ namespace FantasyPopulationSimulator.Console.Races
         public IRace CreatesChildrenOfRace() => new Human();
         public long TimeBetweenPregnancies { get; set; } = 3 * DaysInYear;   
         public int DiesAtAge { get; set; } = 80 * DaysInYear;
-        
     }
-
-
 }

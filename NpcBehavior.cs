@@ -6,12 +6,12 @@ using FantasyPopulationSimulator.Console.Interfaces;
 namespace FantasyPopulationSimulator.Console
 {
 
-    public interface IChildPopulationTracker
-    {
-        void Remove(ITickable npc);
-        void GenerateNewNpc(Npc mother, Npc? father, long day);
+    //public interface IChildPopulationTracker
+    //{
+    //    void Remove(ITickable npc);
+    //    void GenerateNewNpc(Npc mother, Npc? father, long day);
 
-    }
+    //}
 
     public class NpcBehavior
     {
@@ -26,7 +26,7 @@ namespace FantasyPopulationSimulator.Console
 
         public int BirthDay(Npc npc) => (int)(npc.BirthDate % DaysInYear);
 
-        public void BlockUntilTickCompletes(IChildPopulationTracker pop, Npc npc, long today)
+        public void BlockUntilTickCompletes(ChildPopulationTracker pop, Npc npc, long today)
         {
             if (TimeToDie(npc, today))
             {
@@ -52,7 +52,7 @@ namespace FantasyPopulationSimulator.Console
         private bool CanGiveBirthToday(Npc npc, long today) =>
             npc.IsPregnant() && today >= npc.LastImpregnatedOn + npc.Race.PregnancyDurationInDays;
 
-        private void Die(IChildPopulationTracker pop, Npc npc)
+        private void Die(ChildPopulationTracker pop, Npc npc)
         {
             _ui.NpcDeath();
             pop.Remove(npc);
@@ -73,7 +73,7 @@ namespace FantasyPopulationSimulator.Console
         public double ProbabilityOfGettingANewTraitAtDay(int ageInDays) =>
              0.00001f;   //small probability of occurring each day
 
-        private void GiveBirth(IChildPopulationTracker pop, Npc mother, long day)
+        private void GiveBirth(ChildPopulationTracker pop, Npc mother, long day)
         {
             ResetPregnancy(mother, day);
             pop.GenerateNewNpc(mother, null, day); //todo: determine who the father is?

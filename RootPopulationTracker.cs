@@ -17,9 +17,9 @@ namespace FantasyPopulationSimulator.Console
             _behavior = behavior;
         }
 
-        public PopulationTracker CreateTrackerForZone(IZone zone)
+        public ChildPopulationTracker CreateTrackerForZone(IZone zone)
         {
-            var returnable = new PopulationTracker(_rand, zone, _ui, _behavior);
+            var returnable = new ChildPopulationTracker(_rand, zone, _ui, _behavior);
             Add(returnable);
             return returnable;
         }
@@ -33,7 +33,7 @@ namespace FantasyPopulationSimulator.Console
             Tickables.Add(tickable);
 
 
-        public void BlockUntilTickCompletes(IChildPopulationTracker pop, long day)
+        public void BlockUntilTickCompletes(ChildPopulationTracker pop, long day)
         {
             var tasks = new List<Task>();
 

@@ -49,7 +49,7 @@ namespace FantasyPopulationSimulator.Console
         public long GetNpcCount() => 1;        
         public string GetAssignedZoneName() => 
             string.Empty; // violation of liskov substitution principle        
-        public void BlockUntilTickCompletes(IChildPopulationTracker pop, long day) => 
+        public void BlockUntilTickCompletes(ChildPopulationTracker pop, long day) => 
             _behavior.BlockUntilTickCompletes(pop, this, day);
     }
 

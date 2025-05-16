@@ -1,17 +1,10 @@
 ﻿using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
 using FantasyPopulationSimulator.Console.Constants;
 using FantasyPopulationSimulator.Console.Traits;
-using FantasyPopulationSimulator.Console.Interfaces;
+using FantasyPopulationSimulator.Console.Entities;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
-
-    //public interface IChildPopulationTracker
-    //{
-    //    void Remove(ITickable npc);
-    //    void GenerateNewNpc(Npc mother, Npc? father, long day);
-
-    //}
 
     public class NpcBehavior
     {
@@ -24,7 +17,8 @@ namespace FantasyPopulationSimulator.Console
             _rand = rand;
         }
 
-        public int BirthDay(Npc npc) => (int)(npc.BirthDate % DaysInYear);
+        public int BirthDay(Npc npc) => 
+            (int)(npc.BirthDate % DaysInYear);
 
         public void BlockUntilTickCompletes(ChildPopulationTracker pop, Npc npc, long today)
         {
@@ -34,13 +28,27 @@ namespace FantasyPopulationSimulator.Console
                 return;
             }
 
+            foreach (var trait in npc.Traits.Values.ToList())
+            {
+                if (!trait.ProcessTickAndContinue(npc, today)) 
+                { 
+                    npc.AgeInDays++; 
+                    return; 
+                }
+            }
+
             if (BirthDay(npc) == today % DaysInYear) _ui.NpcBirthday();
             if (CanGiveBirthToday(npc, today)) GiveBirth(pop, npc, today);
             if (CanGetPregnant(npc, today)) npc.LastImpregnatedOn = today;
             if (IsAdult(npc, today))
             {
-                if (ProbabilityOfGettingANewTraitAtDay(npc.AgeInDays) >= _rand.GeneratePercentage())
-                    npc.GiveTrait(new WandererTrait());
+                if 
+                    (
+                        !npc.HasTrait("Settler") && 
+                        !npc.HasTrait("Wanderer") &&  
+                        ProbabilityOfGettingANewTraitAtDay(npc.AgeInDays) >= _rand.GeneratePercentage()
+                    ) 
+                    npc.GiveTrait(new WandererTrait(_rand, pop.Parent));
             }
 
             npc.AgeInDays++;
@@ -87,17 +95,20 @@ namespace FantasyPopulationSimulator.Console
 
         private bool CanGetPregnant(Npc npc, long today)   // todo: verify that a mate is nearby?
         {
-            return (
+            return 
                 npc.Sex == Sex.Female &&
                 IsFertile(npc) &&
                 !npc.IsPregnant() &&
-                npc.LastPregnancyEnded + npc.Race.TimeBetweenPregnancies <= today);
+                npc.LastPregnancyEnded + npc.Race.TimeBetweenPregnancies <= today;
         }
 
         public bool IsAdult(Npc npc, long today) =>
             npc.AgeInDays >= npc.Race.AdulthoodBeginsAt;
 
-
+        public void RemoveTraitFromNpc(Npc npc, string traitName)
+        {
+            npc.Traits.Remove(traitName);
+        }
     }
 
 }

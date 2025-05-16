@@ -1,4 +1,4 @@
-﻿namespace FantasyPopulationSimulator.Console
+﻿namespace FantasyPopulationSimulator.Console.Services
 {
     public class RandomNumberGenerator
     {

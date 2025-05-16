@@ -1,7 +1,8 @@
 ﻿using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Services;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Entities
 {
 
     public class Npc : ITickable
@@ -11,7 +12,7 @@ namespace FantasyPopulationSimulator.Console
         private readonly Npc? _father;
         private readonly ChildPopulationTracker _tracker;
 
-        private List<ITrait> Traits { get; set; } = new List<ITrait>();
+        public IDictionary<string, ITrait> Traits = new Dictionary<string, ITrait>();
 
         public Npc(Npc mother, Npc? father, NpcBehavior behavior, ChildPopulationTracker tracker)
         {
@@ -43,13 +44,13 @@ namespace FantasyPopulationSimulator.Console
         public string? LastName { get; set; } // todo: make last name not nullable
         public int AgeInDays { get; set; } = 0;
         public Sex Sex { get; set; } = Sex.None;        
-        public IZone CurrentZone { get; private set; }
+        public IZone CurrentZone { get; set; }
         public long BirthDate { get; set; } = 0;
         public long LastPregnancyEnded { get; set; } = 0;
         public long LastImpregnatedOn { get; set; } = 0;
         public bool IsPregnant() => LastImpregnatedOn > 0;
-        public void GiveTrait(ITrait trait) => Traits.Add(trait);
-        public bool HasTrait(ITrait trait) => Traits.Contains(trait);        
+        public void GiveTrait(ITrait trait) => Traits.Add(trait.Name, trait);
+        public bool HasTrait(string traitName) => Traits.Any(t => t.Key == traitName); 
         public long GetNpcCount() => 1;        
         public string GetAssignedZoneName() => 
             string.Empty; // violation of liskov substitution principle

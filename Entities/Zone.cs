@@ -1,6 +1,6 @@
 ﻿using FantasyPopulationSimulator.Console.Interfaces;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Entities
 {
 
     public class Zone : IZone
@@ -10,5 +10,8 @@ namespace FantasyPopulationSimulator.Console
 
         public void AddZoneConnection(IZone adjacentZone, string connectionName) => 
             AdjacentZones.Add(connectionName, adjacentZone);
+
+        public List<IZone> GetTargetZoneConnections() =>
+            AdjacentZones.Values.ToList();
     }
 }

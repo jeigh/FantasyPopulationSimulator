@@ -1,8 +1,8 @@
 ﻿using FantasyPopulationSimulator.Console.Interfaces;
-using static FantasyPopulationSimulator.Console.Program;
 using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Entities;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
 
 
@@ -12,17 +12,20 @@ namespace FantasyPopulationSimulator.Console
         private IZone _assignedZone;
         private ConsoleUI _ui;
         private NpcBehavior _behavior;
+        public WorldState Parent { get; private set;}
 
-        public ChildPopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior)
+        public ChildPopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior, WorldState parent)
         {
             _behavior = behavior;
             _rand = rand;
             _assignedZone = zone;
             _ui = ui;
             _behavior = behavior;
+            Parent = parent;
         }
 
         private List<ITickable> Tickables { get; set; } = new List<ITickable>();
+        private object tickableLock = new object();
 
         public long NpcCount() => Tickables.Count;
 
@@ -30,8 +33,7 @@ namespace FantasyPopulationSimulator.Console
         {
             var newNpc = new Npc(mother, father, _behavior, this);
 
-            newNpc.Sex = GenerateNewbornSex();
-
+            newNpc.Sex = GenerateNewbornsBiologicalSex();
 
             string newName = Guid.NewGuid().ToString();
 
@@ -43,12 +45,15 @@ namespace FantasyPopulationSimulator.Console
             newNpc.LastName = father?.LastName;                 //todo: better last name generation;  and culture = matrilineal vs patrilineal?
             newNpc.AgeInDays = 0;
             newNpc.BirthDate = day;
-
-            Tickables.Add(newNpc);
+            lock(tickableLock)
+            {
+                Tickables.Add(newNpc);
+            }
+            
             _ui.NpcBirth(mother.FirstName, newNpc.FirstName);
         }
 
-        private Sex GenerateNewbornSex()
+        private Sex GenerateNewbornsBiologicalSex()
         {
             Sex newSex = Sex.None;
 
@@ -60,30 +65,45 @@ namespace FantasyPopulationSimulator.Console
             return newSex;
         }
 
-        public void Remove(ITickable tickable) =>
-            Tickables.Remove(tickable);
+        public void Remove(ITickable tickable)
+        {
+            lock (tickableLock)
+            {
+                if (Tickables.Count == 0) return;
+                Tickables.Remove(tickable);
+            }
+        }
 
         public void BlockUntilTickCompletes(long day)
         {
-            foreach (ITickable n in Tickables.ToList())
+            lock (tickableLock)
             {
-                n.BlockUntilTickCompletes(day);
+                foreach (ITickable child in Tickables.ToList())
+                {
+                    child?.BlockUntilTickCompletes(day);
+                }
             }
         }
 
         public void Add(ITickable tickable)
         {
-            Tickables.Add(tickable);
+            lock (tickableLock)
+            {
+                Tickables.Add(tickable);
+            }
         }
 
         public long GetNpcCount()
         {
             long sum = 0;
-            foreach (ITickable n in Tickables.ToList())
+            lock (tickableLock)
             {
-                sum += n.GetNpcCount();
+                if (Tickables.Count == 0) return 0;
+                foreach (ITickable child in Tickables.ToList())
+                {
+                    sum += child.GetNpcCount();
+                }
             }
-
             return sum;
         }
         public string GetAssignedZoneName() => _assignedZone.ZoneName;

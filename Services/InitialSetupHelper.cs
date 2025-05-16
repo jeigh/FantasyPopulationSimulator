@@ -3,23 +3,22 @@ using FantasyPopulationSimulator.Console.Constants;
 using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Races;
 using FantasyPopulationSimulator.Console.Cultures;
+using FantasyPopulationSimulator.Console.Entities;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class InitialSetupHelper
     {
         private readonly ZoneManagement _zones;
-        private readonly RootPopulationTracker _root;
+        private readonly WorldState _root;
         private readonly RandomNumberGenerator _rand;
-        private readonly ConsoleUI _ui;
         private readonly NpcBehavior _npcs;
 
-        public InitialSetupHelper(ZoneManagement zones, RootPopulationTracker root, RandomNumberGenerator rand, ConsoleUI ui, NpcBehavior npcs)
+        public InitialSetupHelper(ZoneManagement zones, WorldState root, RandomNumberGenerator rand, NpcBehavior npcs)
         {
             _zones = zones;
             _root = root;
             _rand = rand;
-            _ui = ui;
             _npcs = npcs;
         }
 
@@ -34,7 +33,8 @@ namespace FantasyPopulationSimulator.Console
             _zones.AddAdjacentZone(edenZone, freeportZone, twoWayConnection: false);
             _zones.AddAdjacentZone(freeportZone, desertOfRoZone, twoWayConnection: true);
             _zones.AddAdjacentZone(freeportZone, eastCommonlandsZone, twoWayConnection: true);
-            _zones.AddAdjacentZone(eastCommonlandsZone, neriakZone, twoWayConnection: true);
+            _zones.AddAdjacentZone(eastCommonlandsZone, nektulosZone, twoWayConnection: true);
+            _zones.AddAdjacentZone(nektulosZone, neriakZone, twoWayConnection: true);
             _zones.AddAdjacentZone(darkElfEden, neriakZone, twoWayConnection: true);
         }
 
@@ -72,7 +72,7 @@ namespace FantasyPopulationSimulator.Console
 
 
 
-        public Zone CreateStartingZoneForEden(RootPopulationTracker popTracker, ZoneManagement zones, string zoneName)
+        public Zone CreateStartingZoneForEden(WorldState popTracker, ZoneManagement zones, string zoneName)
         {
             var returnable = zones.CreateNewZone(zoneName);
             var firstPop = popTracker.CreateTrackerForZone(returnable);

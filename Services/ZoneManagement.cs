@@ -1,6 +1,7 @@
-﻿using FantasyPopulationSimulator.Console.Interfaces;
+﻿using FantasyPopulationSimulator.Console.Entities;
+using FantasyPopulationSimulator.Console.Interfaces;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class ZoneManagement
     {

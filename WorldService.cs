@@ -32,7 +32,7 @@ namespace FantasyPopulationSimulator.Console
 
         public void BlockUntilTickCompletes(WorldState _worldState, long day)
         {
-            _travel.CompleteTravellerJourneys(_worldState, day);
+            _travel.CompleteTravellerJourneys(day);
 
             var tasks = new List<Task>();
             List<ChildPopulationTracker> tickables = _worldState.GetAllTickables();

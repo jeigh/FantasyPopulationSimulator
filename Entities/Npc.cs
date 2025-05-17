@@ -64,8 +64,8 @@ namespace FantasyPopulationSimulator.Console.Entities
         public string GetAssignedZoneName() => 
             string.Empty; // violation of liskov substitution principle
 
-        public void BlockUntilTickCompletes(WorldState _worldState, long day) =>
-            _behavior.BlockUntilTickCompletes(_worldState, _tracker, this, day);
+        public void BlockUntilTickCompletes(long day) =>
+            _behavior.BlockUntilTickCompletes(_tracker, this, day);
 
     }
 

@@ -7,14 +7,16 @@ namespace FantasyPopulationSimulator.Console
     {
         private TraitReplacementService _traitReplacer;
         private ZoneRetrievalService _zrs;
+        private WorldState _worldState;
 
-        public TravelService(TraitReplacementService traitReplacer, ZoneRetrievalService zrs)
+        public TravelService(TraitReplacementService traitReplacer, ZoneRetrievalService zrs, WorldState worldState)
         {
             _traitReplacer = traitReplacer;
             _zrs = zrs;
+            _worldState = worldState;
         }
 
-        public void CompleteTravellerJourneys(WorldState _worldState, long today)
+        public void CompleteTravellerJourneys(long today)
         {
             var completedTravellers = (from trav in _worldState.GetAllTravellers() select trav).ToList();
             foreach (Traveller traveller in completedTravellers)
@@ -22,7 +24,7 @@ namespace FantasyPopulationSimulator.Console
                 if (traveller.Destination == null) continue;
                 if (traveller.TravelEndDate > today) continue;
 
-                ChildPopulationTracker? destinationTracker = _zrs.GetTrackerByZoneName(_worldState, traveller.Destination.ZoneName) as ChildPopulationTracker;
+                ChildPopulationTracker? destinationTracker = _zrs.GetTrackerByZoneName(traveller.Destination.ZoneName) as ChildPopulationTracker;
                 if (destinationTracker == null) continue;
 
                 // 'twould be nice to be able to stick these following ops in a transaction so they can be rolled back as a group

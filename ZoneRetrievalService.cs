@@ -4,7 +4,14 @@ namespace FantasyPopulationSimulator.Console
 {
     public class ZoneRetrievalService
     {
-        public ChildPopulationTracker? GetTrackerByZoneName(WorldState _worldState, string sourceZoneName)
+        public readonly WorldState _worldState;
+
+        public ZoneRetrievalService(WorldState worldState)
+        {
+            _worldState = worldState;
+        }
+
+        public ChildPopulationTracker? GetTrackerByZoneName(string sourceZoneName)
         {
             foreach (var childZoneTracker in _worldState.GetAllTickables().ToList())
             {

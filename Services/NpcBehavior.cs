@@ -21,7 +21,7 @@ namespace FantasyPopulationSimulator.Console.Services
         public int BirthDay(Npc npc) => 
             (int)(npc.BirthDate % DaysInYear);
 
-        public void BlockUntilTickCompletes(WorldState worldState, ChildPopulationTracker pop, Npc npc, long today)
+        public void BlockUntilTickCompletes(ChildPopulationTracker pop, Npc npc, long today)
         {
             if (TimeToDie(npc, today))
             {
@@ -31,7 +31,7 @@ namespace FantasyPopulationSimulator.Console.Services
 
             foreach (var trait in npc.Traits.Values.ToList())
             {
-                if (!trait.ProcessTickAndContinue(worldState, npc, today)) 
+                if (!trait.ProcessTickAndContinue(npc, today)) 
                 { 
                     npc.AgeInDays++; 
                     return; 

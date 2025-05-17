@@ -10,17 +10,15 @@ namespace FantasyPopulationSimulator.Console.Services
     public class InitialSetupHelper
     {
         private readonly ZoneManagement _zones;
-        private readonly WorldState _root;
         private readonly RandomNumberGenerator _rand;
         private readonly NpcBehavior _npcs;
         private readonly TraitCatalogue _traits;
         private readonly TrackerFactory _trackerFactory;
 
 
-        public InitialSetupHelper(ZoneManagement zones, WorldState root, RandomNumberGenerator rand, NpcBehavior npcs, TraitCatalogue traits, TrackerFactory trackerFactory)
+        public InitialSetupHelper(ZoneManagement zones, RandomNumberGenerator rand, NpcBehavior npcs, TraitCatalogue traits, TrackerFactory trackerFactory)
         {
             _zones = zones;
-            _root = root;
             _rand = rand;
             _npcs = npcs;
             _traits = traits;
@@ -74,7 +72,7 @@ namespace FantasyPopulationSimulator.Console.Services
             pop.Add(eve);
         }
 
-        public Zone CreateStartingZoneForEden(WorldState popTracker, ZoneManagement zones, string zoneName)
+        public Zone CreateStartingZoneForEden(ZoneManagement zones, string zoneName)
         {
             var returnable = zones.CreateNewZone(zoneName);
             var firstPop = _trackerFactory.CreateTrackerForZone(returnable);

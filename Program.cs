@@ -13,28 +13,27 @@ namespace FantasyPopulationSimulator.Console.Services
 
         static void Main(string[] args)
         {
+            // DI stuff
             var rand = new RandomNumberGenerator(12);           // todo:  12 seems arbitrary?
-            
-            var zrs = new ZoneRetrievalService();
             var worldState = new WorldState();
+            var zrs = new ZoneRetrievalService(worldState);
 
-            var movementService = new MovementService(zrs);
-            var wandererTrait = new WandererTrait(rand, movementService);
+            var movementService = new MovementService(zrs, worldState);
+            var wandererTrait = new WandererTrait(rand, movementService, worldState);
             var traits = new TraitCatalogue(wandererTrait, new SettlerTrait());
             var npcs = new NpcBehavior(rand, traits);
             var traitReplacer = new TraitReplacementService(npcs);
-            var travel = new TravelService(traitReplacer, zrs);
+            var travel = new TravelService(traitReplacer, zrs, worldState);
             var worldService = new WorldService(travel);
             var ui = new ConsoleUI(worldService, worldState);
-
             var zones = new ZoneManagement();
-
             var trackerFactory = new TrackerFactory(rand, ui, npcs, traits, worldState);
-            
-            var setup = new InitialSetupHelper(zones, worldState, rand, npcs, traits, trackerFactory);
+            var setup = new InitialSetupHelper(zones, rand, npcs, traits, trackerFactory);
+            // end of DI stuff
 
-            Zone edenZone = setup.CreateStartingZoneForEden(worldState, zones, "Eden");
-            Zone darkElfEden = setup.CreateStartingZoneForEden(worldState, zones, "Dark Elf Eden");
+
+            Zone edenZone = setup.CreateStartingZoneForEden(zones, "Eden");
+            Zone darkElfEden = setup.CreateStartingZoneForEden(zones, "Dark Elf Eden");
 
             setup.SetupEverquestThemedZones(edenZone, darkElfEden);
 

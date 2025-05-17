@@ -7,7 +7,7 @@ namespace FantasyPopulationSimulator.Console.Traits
     {
         public static string Name => "Settler";
 
-        public bool ProcessTickAndContinue(WorldState _worldState, Npc npc, long today)
+        public bool ProcessTickAndContinue(Npc npc, long today)
         {
             return true;  // nothing to do on tick
         }

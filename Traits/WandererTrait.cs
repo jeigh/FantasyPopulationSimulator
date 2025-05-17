@@ -9,16 +9,18 @@ namespace FantasyPopulationSimulator.Console.Traits
     {
         private RandomNumberGenerator _rand;
         private MovementService _mover;
-        
-        public WandererTrait(RandomNumberGenerator rand, MovementService mover)
+        private WorldState _worldState;
+
+        public WandererTrait(RandomNumberGenerator rand, MovementService mover, WorldState worldState)
         {
             _rand = rand;
             _mover = mover;
+            _worldState = worldState;
         }
 
         public string Name => "Wanderer";
 
-        public bool ProcessTickAndContinue(WorldState _worldState, Npc npc, long today)
+        public bool ProcessTickAndContinue(Npc npc, long today)
         {
             // 25% that the wanderer will move to a new zone
             if (0.25f >= _rand.GeneratePercentage())
@@ -34,7 +36,7 @@ namespace FantasyPopulationSimulator.Console.Traits
                     TravelEndDate = today + _rand.GenerateBetween(1, 7) // todo: create a distance attribute in the connection.
                 };
 
-                _mover.MoveNpcToTravellers(_worldState, traveller);                
+                _mover.MoveNpcToTravellers(traveller);                
 
                 return false;
             }

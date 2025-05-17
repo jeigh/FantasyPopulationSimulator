@@ -82,7 +82,7 @@ namespace FantasyPopulationSimulator.Console.Services
             {
                 foreach (Npc? child in Tickables.ToList())
                 {
-                    child?.BlockUntilTickCompletes(_worldState, day);
+                    child?.BlockUntilTickCompletes(day);
                 }
             }
         }

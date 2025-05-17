@@ -13,7 +13,7 @@ namespace FantasyPopulationSimulator.Console.Entities
         private readonly PopulationTracker _tracker;
         private readonly TraitCatalogue _traits;
 
-        public IDictionary<string, ITrait> Traits = new Dictionary<string, ITrait>();
+        public IDictionary<TraitEnum, ITrait> Traits = new Dictionary<TraitEnum, ITrait>();
 
         public Npc(Npc mother, Npc? father, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
         {
@@ -53,16 +53,14 @@ namespace FantasyPopulationSimulator.Console.Entities
         public long LastImpregnatedOn { get; set; } = 0;
         public bool IsPregnant() => LastImpregnatedOn > 0;
         
-        public void GiveTrait(string traitName)
+        public void GiveTrait(TraitEnum trait)
         {
-            ITrait addable = _traits.GetTraitByName(traitName);
-            Traits.Add(traitName, addable);
+            ITrait addable = _traits.GetTraitByEnum(trait);
+            Traits.Add(trait, addable);
         }
 
-        public bool HasTrait(string traitName) => Traits.Any(t => t.Key == traitName); 
+        public bool HasTrait(TraitEnum trait) => Traits.Any(t => t.Key == trait); 
         public long GetNpcCount() => 1;        
-        public string GetAssignedZoneName() => 
-            string.Empty; // violation of liskov substitution principle
 
         public void BlockUntilTickCompletes(long day) =>
             _behavior.BlockUntilTickCompletes(_tracker, this, day);

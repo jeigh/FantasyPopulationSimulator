@@ -1,4 +1,5 @@
-﻿using FantasyPopulationSimulator.Console.Entities;
+﻿using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Entities;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -12,8 +13,8 @@ namespace FantasyPopulationSimulator.Console.Services
 
         public void ReplaceWandererWithSettler(Traveller traveller)
         {
-            _npcs.RemoveTraitFromNpc(traveller!.TravellerNpc, "Wanderer");
-            _npcs.AddTraitToNpc(traveller!.TravellerNpc, "Settler");
+            _npcs.RemoveTraitFromNpc(traveller!.TravellerNpc, TraitEnum.Wanderer);
+            _npcs.AddTraitToNpc(traveller!.TravellerNpc, TraitEnum.Settler);
         }
     }
 }

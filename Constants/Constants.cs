@@ -4,6 +4,5 @@
     {
         public const int DaysInYear = 350;
     }
-    
 
 }

@@ -11,12 +11,10 @@ namespace FantasyPopulationSimulator.Console.Services
     {
         public static void InjectDependencies(IServiceCollection services)
         {
-            services.AddSingleton<RandomNumberGenerator>(_ => new RandomNumberGenerator(12));
+            services.AddSingleton(_ => new RandomNumberGenerator(12));
             services.AddSingleton<WorldState>();
             services.AddSingleton<ZoneRetrievalService>();
             services.AddSingleton<MovementService>();
-            services.AddSingleton<WandererTrait>();
-            services.AddSingleton<SettlerTrait>();
             services.AddSingleton<TraitCatalogue>();
             services.AddSingleton<NpcBehavior>();
             services.AddSingleton<TraitReplacementService>();
@@ -26,6 +24,43 @@ namespace FantasyPopulationSimulator.Console.Services
             services.AddSingleton<ZoneManagement>();
             services.AddSingleton<TrackerFactory>();
             services.AddSingleton<InitialSetupHelper>();
+            // traits
+            services.AddSingleton<WandererTrait>();
+            services.AddSingleton<SettlerTrait>();
+            services.AddSingleton<BraveTrait>();
+            services.AddSingleton<CravenTrait>();
+            services.AddSingleton<CalmTrait>();
+            services.AddSingleton<WrathfulTrait>();
+            services.AddSingleton<ChasteTrait>();
+            services.AddSingleton<LustfulTrait>();
+            services.AddSingleton<ContentTrait>();
+            services.AddSingleton<AmbitiousTrait>();
+            services.AddSingleton<DiligentTrait>();
+            services.AddSingleton<LazyTrait>();
+            services.AddSingleton<ForgivingTrait>();
+            services.AddSingleton<VengefulTrait>();
+            services.AddSingleton<GenerousTrait>();
+            services.AddSingleton<GreedyTrait>();
+            services.AddSingleton<GregariousTrait>();
+            services.AddSingleton<ShyTrait>();
+            services.AddSingleton<HonestTrait>();
+            services.AddSingleton<DeceitfulTrait>();
+            services.AddSingleton<HumbleTrait>();
+            services.AddSingleton<ArrogantTrait>();
+            services.AddSingleton<JustTrait>();
+            services.AddSingleton<ArbitraryTrait>();
+            services.AddSingleton<PatientTrait>();
+            services.AddSingleton<ImpatientTrait>();
+            services.AddSingleton<TemperantTrait>();
+            services.AddSingleton<GluttonousTrait>();
+            services.AddSingleton<TrustingTrait>();
+            services.AddSingleton<ParanoidTrait>();
+            services.AddSingleton<ZealousTrait>();
+            services.AddSingleton<CynicalTrait>();
+            services.AddSingleton<CompassionateTrait>();
+            services.AddSingleton<SadisticTrait>();
+            services.AddSingleton<RacialAgonismTrait>();
+            services.AddSingleton<RacialAntagonismTrait>();
         }
 
         static void Main(string[] args)
@@ -53,7 +88,6 @@ namespace FantasyPopulationSimulator.Console.Services
                 {
                     int currentYear = (int)(day / DaysInYear);
                     ui.Clear();
-                    //ui.DeclareYear(currentYear, root.GetNpcCount());
 
                     if (day % DaysInYear == 0) ui.EmitSummary(currentYear);
                 }

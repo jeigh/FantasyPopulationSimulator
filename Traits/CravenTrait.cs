@@ -4,9 +4,9 @@ using FantasyPopulationSimulator.Console.Interfaces;
 
 namespace FantasyPopulationSimulator.Console.Traits
 {
-    public class SettlerTrait : ITrait
+    public class CravenTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Settler;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;  
+        public static TraitEnum Trait => TraitEnum.Craven;
+        public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

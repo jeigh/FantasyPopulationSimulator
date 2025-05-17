@@ -6,23 +6,21 @@ namespace FantasyPopulationSimulator.Console.Services
 {
 
 
-    public class ChildPopulationTracker
+    public class PopulationTracker
     {
         private RandomNumberGenerator _rand;
         private IZone _assignedZone;
-        private ConsoleUI _ui;
+        private DisplayService _ui;
         private NpcBehavior _behavior;
         private TraitCatalogue _traits;
-        private WorldState _worldState;
 
-        public ChildPopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior, WorldState worldState, TraitCatalogue traits)
+        public PopulationTracker(RandomNumberGenerator rand, IZone zone, DisplayService ui, NpcBehavior behavior, TraitCatalogue traits)
         {
             _behavior = behavior;
             _rand = rand;
             _assignedZone = zone;
             _ui = ui;
             _behavior = behavior;
-            _worldState = worldState;
             _traits = traits;
         }
 

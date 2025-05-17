@@ -1,11 +1,13 @@
-﻿namespace FantasyPopulationSimulator.Console.Services
+﻿using FantasyPopulationSimulator.Console.Entities;
+
+namespace FantasyPopulationSimulator.Console.Services
 {
-    public class ConsoleUI 
+    public class DisplayService 
     {
         private readonly WorldService _worldService;
         private readonly WorldState _worldState;
 
-        public ConsoleUI(WorldService worldService, WorldState worldState)
+        public DisplayService(WorldService worldService, WorldState worldState)
         {
             _worldService = worldService;
             _worldState = worldState;
@@ -20,6 +22,8 @@
                 var zoneNpcCount = childPop.GetNpcCount();
                 System.Console.WriteLine($"Zone: {childPop.GetAssignedZoneName()}, Npc Count: {zoneNpcCount}");
             }
+            var travellerCount = _worldState.GetTravellerCount();
+            System.Console.WriteLine($"Total Travellers: {travellerCount}");
         }
 
         public void Clear() => System.Console.Clear();

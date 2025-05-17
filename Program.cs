@@ -8,9 +8,6 @@ namespace FantasyPopulationSimulator.Console.Services
 
     internal partial class Program
     {
-
-        
-
         static void Main(string[] args)
         {
             // DI stuff
@@ -19,13 +16,13 @@ namespace FantasyPopulationSimulator.Console.Services
             var zrs = new ZoneRetrievalService(worldState);
 
             var movementService = new MovementService(zrs, worldState);
-            var wandererTrait = new WandererTrait(rand, movementService, worldState);
+            var wandererTrait = new WandererTrait(rand, movementService);
             var traits = new TraitCatalogue(wandererTrait, new SettlerTrait());
             var npcs = new NpcBehavior(rand, traits);
             var traitReplacer = new TraitReplacementService(npcs);
             var travel = new TravelService(traitReplacer, zrs, worldState);
             var worldService = new WorldService(travel);
-            var ui = new ConsoleUI(worldService, worldState);
+            var ui = new DisplayService(worldService, worldState);
             var zones = new ZoneManagement();
             var trackerFactory = new TrackerFactory(rand, ui, npcs, traits, worldState);
             var setup = new InitialSetupHelper(zones, rand, npcs, traits, trackerFactory);

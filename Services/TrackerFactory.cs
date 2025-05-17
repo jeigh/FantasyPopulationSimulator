@@ -1,17 +1,17 @@
-﻿using FantasyPopulationSimulator.Console.Interfaces;
-using FantasyPopulationSimulator.Console.Services;
+﻿using FantasyPopulationSimulator.Console.Entities;
+using FantasyPopulationSimulator.Console.Interfaces;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class TrackerFactory
     {
         private readonly RandomNumberGenerator _rand;
-        private readonly ConsoleUI _ui;
+        private readonly DisplayService _ui;
         private readonly NpcBehavior _behavior;
         private readonly TraitCatalogue _traits;
         private readonly WorldState _worldState;
 
-        public TrackerFactory(RandomNumberGenerator rand, ConsoleUI ui, NpcBehavior behavior, TraitCatalogue traits, WorldState worldState)
+        public TrackerFactory(RandomNumberGenerator rand, DisplayService ui, NpcBehavior behavior, TraitCatalogue traits, WorldState worldState)
         {
             _rand = rand;
             _ui = ui;
@@ -20,9 +20,9 @@ namespace FantasyPopulationSimulator.Console
             _worldState = worldState;
         }
 
-        public ChildPopulationTracker CreateTrackerForZone(IZone zone)
+        public PopulationTracker CreateTrackerForZone(IZone zone)
         {
-            var returnable = new ChildPopulationTracker(_rand, zone, _ui, _behavior, _worldState, _traits);
+            var returnable = new PopulationTracker(_rand, zone, _ui, _behavior, _traits);
             _worldState.Add(returnable);
             return returnable;
         }

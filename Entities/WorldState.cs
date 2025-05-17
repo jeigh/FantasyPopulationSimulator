@@ -1,25 +1,24 @@
-﻿using FantasyPopulationSimulator.Console.Entities;
-using FantasyPopulationSimulator.Console.Interfaces;
+﻿using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Services;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Entities
 {
-
-
     public class WorldState 
     {
-        private List<ChildPopulationTracker> Tickables { get; set; } = new List<ChildPopulationTracker>();
+        private List<PopulationTracker> PopulationTrackers { get; set; } = new List<PopulationTracker>();
         private object tickableLock = new object();
 
-        public List<ChildPopulationTracker> GetAllTickables()
+        public List<PopulationTracker> GetAllTickables()
         {
             lock (tickableLock) 
-                return Tickables.ToList();
+                return PopulationTrackers.ToList();
         }
 
         private List<Traveller> _travellers = new List<Traveller>();
         private object travellersLock = new object();
         
+        public int GetTravellerCount() => _travellers.Count;
+
         public void AddTraveller(Traveller traveller)
         {
             lock (travellersLock)
@@ -44,14 +43,8 @@ namespace FantasyPopulationSimulator.Console
             }
         }
 
-        public void Remove(ChildPopulationTracker tickable) => 
-            Tickables.Remove(tickable);
+        public void Add(PopulationTracker tickable) => 
+            PopulationTrackers.Add(tickable);
 
-        public void Add(ChildPopulationTracker tickable) => 
-            Tickables.Add(tickable);
-
-        public List<ChildPopulationTracker> GetChildren() => Tickables.ToList();
-
-        public string GetAssignedZoneName() => "Root";
     }
 }

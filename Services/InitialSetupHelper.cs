@@ -48,7 +48,7 @@ namespace FantasyPopulationSimulator.Console.Services
             return newZone;
         }
 
-        public void GenerateAdam(ChildPopulationTracker pop, IZone currentZone)
+        public void GenerateAdam(PopulationTracker pop, IZone currentZone)
         {
             var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
 
@@ -60,7 +60,7 @@ namespace FantasyPopulationSimulator.Console.Services
             pop.Add(adam);
         }
 
-        public void GenerateEve(ChildPopulationTracker pop, IZone currentZone)
+        public void GenerateEve(PopulationTracker pop, IZone currentZone)
         {
             var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
 

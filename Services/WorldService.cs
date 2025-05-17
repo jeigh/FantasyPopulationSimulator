@@ -1,9 +1,8 @@
 ﻿using FantasyPopulationSimulator.Console.Entities;
 using FantasyPopulationSimulator.Console.Interfaces;
-using FantasyPopulationSimulator.Console.Services;
 using FantasyPopulationSimulator.Console.Traits;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     
 
@@ -35,7 +34,7 @@ namespace FantasyPopulationSimulator.Console
             _travel.CompleteTravellerJourneys(day);
 
             var tasks = new List<Task>();
-            List<ChildPopulationTracker> tickables = _worldState.GetAllTickables();
+            List<PopulationTracker> tickables = _worldState.GetAllTickables();
             foreach (var child in tickables)
             {
                 child?.BlockUntilTickCompletes(day);

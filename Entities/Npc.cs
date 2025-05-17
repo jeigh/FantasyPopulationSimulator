@@ -10,12 +10,12 @@ namespace FantasyPopulationSimulator.Console.Entities
         private readonly NpcBehavior _behavior;
         private readonly Npc? _mother;
         private readonly Npc? _father;
-        private readonly ChildPopulationTracker _tracker;
+        private readonly PopulationTracker _tracker;
         private readonly TraitCatalogue _traits;
 
         public IDictionary<string, ITrait> Traits = new Dictionary<string, ITrait>();
 
-        public Npc(Npc mother, Npc? father, NpcBehavior behavior, ChildPopulationTracker tracker, TraitCatalogue traits)
+        public Npc(Npc mother, Npc? father, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
         {
             _behavior = behavior;
             _tracker = tracker;
@@ -30,7 +30,7 @@ namespace FantasyPopulationSimulator.Console.Entities
             CurrentZone = _mother.CurrentZone;    // todo: matrilineal or patrilineal zone?
         }
 
-        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, ChildPopulationTracker tracker, TraitCatalogue traits)
+        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
         {
             _behavior = behavior;
             _tracker = tracker;

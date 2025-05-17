@@ -1,7 +1,6 @@
 ﻿using FantasyPopulationSimulator.Console.Entities;
-using FantasyPopulationSimulator.Console.Services;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class TraitReplacementService
     {

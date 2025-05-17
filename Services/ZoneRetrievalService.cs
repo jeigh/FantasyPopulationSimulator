@@ -1,6 +1,6 @@
-﻿using FantasyPopulationSimulator.Console.Services;
+﻿using FantasyPopulationSimulator.Console.Entities;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class ZoneRetrievalService
     {
@@ -11,7 +11,7 @@ namespace FantasyPopulationSimulator.Console
             _worldState = worldState;
         }
 
-        public ChildPopulationTracker? GetTrackerByZoneName(string sourceZoneName)
+        public PopulationTracker? GetTrackerByZoneName(string sourceZoneName)
         {
             foreach (var childZoneTracker in _worldState.GetAllTickables().ToList())
             {

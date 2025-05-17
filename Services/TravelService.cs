@@ -1,7 +1,6 @@
 ﻿using FantasyPopulationSimulator.Console.Entities;
-using FantasyPopulationSimulator.Console.Services;
 
-namespace FantasyPopulationSimulator.Console
+namespace FantasyPopulationSimulator.Console.Services
 {
     public class TravelService
     {
@@ -24,7 +23,7 @@ namespace FantasyPopulationSimulator.Console
                 if (traveller.Destination == null) continue;
                 if (traveller.TravelEndDate > today) continue;
 
-                ChildPopulationTracker? destinationTracker = _zrs.GetTrackerByZoneName(traveller.Destination.ZoneName) as ChildPopulationTracker;
+                PopulationTracker? destinationTracker = _zrs.GetTrackerByZoneName(traveller.Destination.ZoneName) as PopulationTracker;
                 if (destinationTracker == null) continue;
 
                 // 'twould be nice to be able to stick these following ops in a transaction so they can be rolled back as a group

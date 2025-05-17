@@ -9,13 +9,11 @@ namespace FantasyPopulationSimulator.Console.Traits
     {
         private RandomNumberGenerator _rand;
         private MovementService _mover;
-        private WorldState _worldState;
 
-        public WandererTrait(RandomNumberGenerator rand, MovementService mover, WorldState worldState)
+        public WandererTrait(RandomNumberGenerator rand, MovementService mover)
         {
             _rand = rand;
             _mover = mover;
-            _worldState = worldState;
         }
 
         public string Name => "Wanderer";

@@ -13,13 +13,18 @@ namespace FantasyPopulationSimulator.Console.Services
         private readonly WorldState _root;
         private readonly RandomNumberGenerator _rand;
         private readonly NpcBehavior _npcs;
+        private readonly TraitCatalogue _traits;
+        private readonly TrackerFactory _trackerFactory;
 
-        public InitialSetupHelper(ZoneManagement zones, WorldState root, RandomNumberGenerator rand, NpcBehavior npcs)
+
+        public InitialSetupHelper(ZoneManagement zones, WorldState root, RandomNumberGenerator rand, NpcBehavior npcs, TraitCatalogue traits, TrackerFactory trackerFactory)
         {
             _zones = zones;
             _root = root;
             _rand = rand;
             _npcs = npcs;
+            _traits = traits;
+            _trackerFactory = trackerFactory;
         }
 
         public void SetupEverquestThemedZones(Zone edenZone, Zone darkElfEden)
@@ -41,13 +46,13 @@ namespace FantasyPopulationSimulator.Console.Services
         public Zone CreateAndTrackNewZone(string zoneName)
         {
             var newZone = _zones.CreateNewZone(zoneName);
-            _root.CreateTrackerForZone(newZone);
+            _trackerFactory.CreateTrackerForZone(newZone);
             return newZone;
         }
 
         public void GenerateAdam(ChildPopulationTracker pop, IZone currentZone)
         {
-            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
+            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
 
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * DaysInYear;
@@ -59,7 +64,7 @@ namespace FantasyPopulationSimulator.Console.Services
 
         public void GenerateEve(ChildPopulationTracker pop, IZone currentZone)
         {
-            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
+            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
 
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * DaysInYear;
@@ -69,13 +74,10 @@ namespace FantasyPopulationSimulator.Console.Services
             pop.Add(eve);
         }
 
-
-
-
         public Zone CreateStartingZoneForEden(WorldState popTracker, ZoneManagement zones, string zoneName)
         {
             var returnable = zones.CreateNewZone(zoneName);
-            var firstPop = popTracker.CreateTrackerForZone(returnable);
+            var firstPop = _trackerFactory.CreateTrackerForZone(returnable);
 
             GenerateAdam(firstPop, returnable);
             GenerateEve(firstPop, returnable);

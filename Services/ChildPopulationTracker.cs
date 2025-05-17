@@ -6,32 +6,34 @@ namespace FantasyPopulationSimulator.Console.Services
 {
 
 
-    public class ChildPopulationTracker : ITicker, ITickable
+    public class ChildPopulationTracker
     {
         private RandomNumberGenerator _rand;
         private IZone _assignedZone;
         private ConsoleUI _ui;
         private NpcBehavior _behavior;
-        public WorldState Parent { get; private set;}
+        private TraitCatalogue _traits;
+        private WorldState _worldState;
 
-        public ChildPopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior, WorldState parent)
+        public ChildPopulationTracker(RandomNumberGenerator rand, IZone zone, ConsoleUI ui, NpcBehavior behavior, WorldState worldState, TraitCatalogue traits)
         {
             _behavior = behavior;
             _rand = rand;
             _assignedZone = zone;
             _ui = ui;
             _behavior = behavior;
-            Parent = parent;
+            _worldState = worldState;
+            _traits = traits;
         }
 
-        private List<ITickable> Tickables { get; set; } = new List<ITickable>();
+        private List<Npc> Tickables { get; set; } = new List<Npc>();
         private object tickableLock = new object();
 
         public long NpcCount() => Tickables.Count;
 
         public void GenerateNewNpc(Npc mother, Npc? father, long day)
         {
-            var newNpc = new Npc(mother, father, _behavior, this);
+            var newNpc = new Npc(mother, father, _behavior, this, _traits);
 
             newNpc.Sex = GenerateNewbornsBiologicalSex();
 
@@ -65,7 +67,7 @@ namespace FantasyPopulationSimulator.Console.Services
             return newSex;
         }
 
-        public void Remove(ITickable tickable)
+        public void Remove(Npc tickable)
         {
             lock (tickableLock)
             {
@@ -78,14 +80,14 @@ namespace FantasyPopulationSimulator.Console.Services
         {
             lock (tickableLock)
             {
-                foreach (ITickable child in Tickables.ToList())
+                foreach (Npc? child in Tickables.ToList())
                 {
-                    child?.BlockUntilTickCompletes(day);
+                    child?.BlockUntilTickCompletes(_worldState, day);
                 }
             }
         }
 
-        public void Add(ITickable tickable)
+        public void Add(Npc tickable)
         {
             lock (tickableLock)
             {
@@ -99,7 +101,7 @@ namespace FantasyPopulationSimulator.Console.Services
             lock (tickableLock)
             {
                 if (Tickables.Count == 0) return 0;
-                foreach (ITickable child in Tickables.ToList())
+                foreach (var child in Tickables.ToList())
                 {
                     sum += child.GetNpcCount();
                 }

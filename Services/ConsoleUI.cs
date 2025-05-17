@@ -2,12 +2,20 @@
 {
     public class ConsoleUI 
     {
+        private readonly WorldService _worldService;
+        private readonly WorldState _worldState;
 
-        public void EmitSummary(WorldState _root, long currentYear) 
+        public ConsoleUI(WorldService worldService, WorldState worldState)
         {
-            var totalNpcCount = _root.GetNpcCount();
+            _worldService = worldService;
+            _worldState = worldState;
+        }
+
+        public void EmitSummary(long currentYear) 
+        {
+            var totalNpcCount = _worldService.GetNpcCount(_worldState);
             System.Console.WriteLine($"Year: {currentYear}, Total Npc Count: {totalNpcCount}");
-            foreach(var childPop in _root.GetChildren())
+            foreach(var childPop in _worldState.GetAllTickables())
             {
                 var zoneNpcCount = childPop.GetNpcCount();
                 System.Console.WriteLine($"Zone: {childPop.GetAssignedZoneName()}, Npc Count: {zoneNpcCount}");

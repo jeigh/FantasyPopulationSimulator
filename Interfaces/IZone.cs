@@ -6,7 +6,9 @@ namespace FantasyPopulationSimulator.Console.Interfaces
         string ZoneName { get; set; }
 
         void AddZoneConnection(IZone adjacentZone, string connectionName);
-
+        
         List<IZone> GetTargetZoneConnections();
+
+
     }
 }

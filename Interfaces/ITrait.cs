@@ -4,8 +4,8 @@ namespace FantasyPopulationSimulator.Console.Interfaces
 {
     public interface ITrait
     {
-        bool ProcessTickAndContinue(Npc npc, long today);  // true if continue, false if NPC should not be processed anymore for this tick.
-        string Name { get; }
+        bool ProcessTickAndContinue(WorldState worldState, Npc npc, long today);  // true if continue, false if NPC should not be processed anymore for this tick.
+        static string Name { get; }
     }
 
 }

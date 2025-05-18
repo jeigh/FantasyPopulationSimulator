@@ -1,9 +1,12 @@
-﻿using FantasyPopulationSimulator.Console.Entities;
+﻿using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Entities;
 using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Services;
 
 namespace FantasyPopulationSimulator.Console.Traits
 {
+
+
 
     public class WandererTrait : ITrait 
     {
@@ -14,10 +17,9 @@ namespace FantasyPopulationSimulator.Console.Traits
         {
             _rand = rand;
             _mover = mover;
-        }
+        }        
 
-        public string Name => "Wanderer";
-
+        public  TraitEnum Trait => TraitEnum.Wanderer;
         public bool ProcessTickAndContinue(Npc npc, long today)
         {
             // 25% that the wanderer will move to a new zone

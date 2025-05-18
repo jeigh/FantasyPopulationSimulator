@@ -8,6 +8,8 @@ namespace FantasyPopulationSimulator.Console.Cultures
     {
         private RandomNumberGenerator _rand;
 
+        public Dictionary<string, double> TraitDispositions { get ; set ; }
+
         public DefaultCulture(RandomNumberGenerator rand)
         {
             _rand = rand;

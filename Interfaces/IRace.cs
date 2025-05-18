@@ -3,7 +3,7 @@
 namespace FantasyPopulationSimulator.Console.Interfaces
 {
 
-    public interface IRace
+    public interface IRace : IFaction
     {
         public int StartOfFertility { get; }
         public int EndOfFertility { get; }

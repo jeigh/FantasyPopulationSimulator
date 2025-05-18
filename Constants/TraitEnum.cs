@@ -1,0 +1,43 @@
+﻿namespace FantasyPopulationSimulator.Console.Constants
+{
+    public enum TraitEnum
+    {
+        Wanderer,
+        Settler,
+        Brave,
+        Craven,
+        Calm,
+        Wrathful,
+        Chaste,
+        Lustful,
+        Content,
+        Ambitious,
+        Diligent,
+        Lazy,
+        Forgiving,
+        Vengeful,
+        Generous,
+        Greedy,
+        Gregarious,
+        Shy,
+        Honest,
+        Deceitful,
+        Humble,
+        Arrogant,
+        Just,
+        Arbitrary,
+        Patient,
+        Impatient,
+        Temperant,
+        Gluttonous,
+        Trusting,
+        Paranoid,
+        Zealous,
+        Cynical,
+        Compassionate,
+        Sadistic,
+        RacialAgonism,
+        RacialAntagonism
+    }
+
+}

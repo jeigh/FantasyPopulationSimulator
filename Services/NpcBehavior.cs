@@ -45,24 +45,24 @@ namespace FantasyPopulationSimulator.Console.Services
             {
                 if 
                     (
-                        !npc.HasTrait("Settler") && 
-                        !npc.HasTrait("Wanderer") &&  
+                        !npc.HasTrait(TraitEnum.Settler) && 
+                        !npc.HasTrait(TraitEnum.Wanderer) &&  
                         ProbabilityOfGettingANewTraitAtDay(npc.AgeInDays) >= _rand.GeneratePercentage()
                     ) 
-                AddTraitToNpc(npc, "Wanderer");
+                AddTraitToNpc(npc, TraitEnum.Wanderer);
             }
 
             npc.AgeInDays++;
         }
 
-        public void AddTraitToNpc(Npc npc, string traitName)
+        public void AddTraitToNpc(Npc npc, TraitEnum traitEnum)
         {
-            if (npc.Traits.ContainsKey(traitName)) return;
+            if (npc.Traits.ContainsKey(traitEnum)) return;
 
-            ITrait trait = _traits.GetTraitByName(traitName);
+            ITrait trait = _traits.GetTraitByEnum(traitEnum);
             if (trait == null) return;
 
-            npc.Traits.Add(traitName, trait);
+            npc.Traits.Add(traitEnum, trait);
         }
 
         private bool TimeToDie(Npc npc, long today) => 
@@ -115,9 +115,9 @@ namespace FantasyPopulationSimulator.Console.Services
         public bool IsAdult(Npc npc, long today) =>
             npc.AgeInDays >= npc.Race.AdulthoodBeginsAt;
 
-        public void RemoveTraitFromNpc(Npc npc, string traitName)
+        public void RemoveTraitFromNpc(Npc npc, TraitEnum trait)
         {
-            npc.Traits.Remove(traitName);
+            npc.Traits.Remove(trait);
         }
     }
 

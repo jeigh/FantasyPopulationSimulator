@@ -12,6 +12,7 @@ namespace FantasyPopulationSimulator.Console.Races
         public IRace CreatesChildrenOfRace() => new DarkElf();
         public long TimeBetweenPregnancies { get; set; } = 3 * DaysInYear;
         public int DiesAtAge { get; set; } = 300 * DaysInYear;
+        public Dictionary<string, double> TraitDispositions { get ; set ; }
     }
 
 

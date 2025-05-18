@@ -1,6 +1,7 @@
 ﻿namespace FantasyPopulationSimulator.Console.Interfaces
 {
-    public interface IReligion
+
+    public interface IReligion : IFaction
     {
         //todo eventually
     }

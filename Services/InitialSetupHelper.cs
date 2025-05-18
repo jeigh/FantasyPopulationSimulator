@@ -50,7 +50,7 @@ namespace FantasyPopulationSimulator.Console.Services
 
         public void GenerateAdam(PopulationTracker pop, IZone currentZone)
         {
-            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
+            var adam = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
 
             adam.FirstName = "Adam";
             adam.AgeInDays = 16 * DaysInYear;
@@ -62,7 +62,7 @@ namespace FantasyPopulationSimulator.Console.Services
 
         public void GenerateEve(PopulationTracker pop, IZone currentZone)
         {
-            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop, _traits);
+            var eve = new Npc(new Human(), new DefaultCulture(_rand), currentZone, _npcs, pop);
 
             eve.FirstName = "Eve";
             eve.AgeInDays = 16 * DaysInYear;

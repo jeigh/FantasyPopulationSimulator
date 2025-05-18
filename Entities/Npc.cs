@@ -11,15 +11,14 @@ namespace FantasyPopulationSimulator.Console.Entities
         private readonly Npc? _mother;
         private readonly Npc? _father;
         private readonly PopulationTracker _tracker;
-        private readonly TraitCatalogue _traits;
+        
 
-        public IDictionary<string, ITrait> Traits = new Dictionary<string, ITrait>();
+        public IDictionary<TraitEnum, ITrait> Traits = new Dictionary<TraitEnum, ITrait>();
 
         public Npc(Npc mother, Npc? father, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
         {
             _behavior = behavior;
             _tracker = tracker;
-            _traits = traits;
 
             _mother = mother;
             _father = father;
@@ -30,11 +29,10 @@ namespace FantasyPopulationSimulator.Console.Entities
             CurrentZone = _mother.CurrentZone;    // todo: matrilineal or patrilineal zone?
         }
 
-        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
+        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker)
         {
             _behavior = behavior;
             _tracker = tracker;
-            _traits = traits;
 
             Race = race;
             Culture = culture;
@@ -53,16 +51,14 @@ namespace FantasyPopulationSimulator.Console.Entities
         public long LastImpregnatedOn { get; set; } = 0;
         public bool IsPregnant() => LastImpregnatedOn > 0;
         
-        public void GiveTrait(string traitName)
+        public void GiveTrait(ITrait trait)
         {
-            ITrait addable = _traits.GetTraitByName(traitName);
-            Traits.Add(traitName, addable);
+            if (Traits.ContainsKey(trait.Trait)) return;
+            Traits.Add(trait.Trait, trait);
         }
 
-        public bool HasTrait(string traitName) => Traits.Any(t => t.Key == traitName); 
+        public bool HasTrait(TraitEnum trait) => Traits.Any(t => t.Key == trait); 
         public long GetNpcCount() => 1;        
-        public string GetAssignedZoneName() => 
-            string.Empty; // violation of liskov substitution principle
 
         public void BlockUntilTickCompletes(long day) =>
             _behavior.BlockUntilTickCompletes(_tracker, this, day);

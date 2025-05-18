@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class CalmTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Calm;
+        public  TraitEnum Trait => TraitEnum.Calm;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

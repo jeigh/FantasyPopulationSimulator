@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class CompassionateTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Compassionate;
+        public  TraitEnum Trait => TraitEnum.Compassionate;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

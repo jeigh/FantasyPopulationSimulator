@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class RacialAntagonismTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.RacialAntagonism;
+        public  TraitEnum Trait => TraitEnum.RacialAntagonism;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

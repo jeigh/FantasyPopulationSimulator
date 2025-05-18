@@ -11,7 +11,7 @@ namespace FantasyPopulationSimulator.Console.Entities
         private readonly Npc? _mother;
         private readonly Npc? _father;
         private readonly PopulationTracker _tracker;
-        private readonly TraitCatalogue _traits;
+        
 
         public IDictionary<TraitEnum, ITrait> Traits = new Dictionary<TraitEnum, ITrait>();
 
@@ -19,7 +19,6 @@ namespace FantasyPopulationSimulator.Console.Entities
         {
             _behavior = behavior;
             _tracker = tracker;
-            _traits = traits;
 
             _mother = mother;
             _father = father;
@@ -30,11 +29,10 @@ namespace FantasyPopulationSimulator.Console.Entities
             CurrentZone = _mother.CurrentZone;    // todo: matrilineal or patrilineal zone?
         }
 
-        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
+        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker)
         {
             _behavior = behavior;
             _tracker = tracker;
-            _traits = traits;
 
             Race = race;
             Culture = culture;
@@ -53,10 +51,10 @@ namespace FantasyPopulationSimulator.Console.Entities
         public long LastImpregnatedOn { get; set; } = 0;
         public bool IsPregnant() => LastImpregnatedOn > 0;
         
-        public void GiveTrait(TraitEnum trait)
+        public void GiveTrait(ITrait trait)
         {
-            ITrait addable = _traits.GetTraitByEnum(trait);
-            Traits.Add(trait, addable);
+            if (Traits.ContainsKey(trait.Trait)) return;
+            Traits.Add(trait.Trait, trait);
         }
 
         public bool HasTrait(TraitEnum trait) => Traits.Any(t => t.Key == trait); 

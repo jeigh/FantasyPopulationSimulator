@@ -3,6 +3,8 @@ using FantasyPopulationSimulator.Console.Traits;
 using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using FantasyPopulationSimulator.Console.Interfaces;
+using FantasyPopulationSimulator.Console.Constants;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -69,6 +71,8 @@ namespace FantasyPopulationSimulator.Console.Services
                 .CreateDefaultBuilder(args)
                 .ConfigureServices(InjectDependencies)
                 .Build();
+
+            
 
             var setup = host.Services.GetRequiredService<InitialSetupHelper>();
             var ui = host.Services.GetRequiredService<DisplayService>();

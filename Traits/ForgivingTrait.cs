@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class ForgivingTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Forgiving;
+        public  TraitEnum Trait => TraitEnum.Forgiving;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

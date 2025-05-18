@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class GenerousTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Generous;
+        public  TraitEnum Trait => TraitEnum.Generous;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

@@ -6,7 +6,7 @@ namespace FantasyPopulationSimulator.Console.Traits
 {
     public class AmbitiousTrait : ITrait
     {
-        public static TraitEnum Trait => TraitEnum.Ambitious;
+        public TraitEnum Trait => TraitEnum.Ambitious;
         public bool ProcessTickAndContinue(Npc npc, long today) => true;
     }
 }

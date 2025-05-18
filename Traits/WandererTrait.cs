@@ -19,7 +19,7 @@ namespace FantasyPopulationSimulator.Console.Traits
             _mover = mover;
         }        
 
-        public static TraitEnum Trait => TraitEnum.Wanderer;
+        public  TraitEnum Trait => TraitEnum.Wanderer;
         public bool ProcessTickAndContinue(Npc npc, long today)
         {
             // 25% that the wanderer will move to a new zone

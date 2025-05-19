@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Races;
+using FantasyPopulationSimulator.Console.Cultures;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -79,9 +81,10 @@ namespace FantasyPopulationSimulator.Console.Services
             var worldService = host.Services.GetRequiredService<WorldService>();
             var worldState = host.Services.GetRequiredService<WorldState>();
             var zones = host.Services.GetRequiredService<ZoneManagement>();
+            var rand = host.Services.GetRequiredService<RandomNumberGenerator>();
 
-            Zone edenZone = setup.CreateStartingZoneForEden(zones, "Eden");
-            Zone darkElfEden = setup.CreateStartingZoneForEden(zones, "Dark Elf Eden");
+            Zone edenZone = setup.CreateStartingZoneForEden(zones, "Eden", new Human(), new DefaultCulture(rand), string.Empty);
+            Zone darkElfEden = setup.CreateStartingZoneForEden(zones, "Dark Elf Eden", new DarkElf(), new DarkElfCulture(rand), "DE_");
 
             setup.SetupEverquestThemedZones(edenZone, darkElfEden);
 

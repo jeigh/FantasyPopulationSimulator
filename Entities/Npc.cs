@@ -49,6 +49,9 @@ namespace FantasyPopulationSimulator.Console.Entities
         public long BirthDate { get; set; } = 0;
         public long LastPregnancyEnded { get; set; } = 0;
         public long LastImpregnatedOn { get; set; } = 0;
+        public int ChildrenCount { get; set; } = 0;
+        public bool IsDead { get; set; } = false;
+
         public bool IsPregnant() => LastImpregnatedOn > 0;
         
         public void GiveTrait(ITrait trait)

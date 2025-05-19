@@ -23,6 +23,7 @@ namespace FantasyPopulationSimulator.Console.Services
 
         public void BlockUntilTickCompletes(PopulationTracker pop, Npc npc, long today)
         {
+            if (npc.IsDead) return;
             if (TimeToDie(npc, today))
             {
                 Die(pop, npc);
@@ -65,14 +66,18 @@ namespace FantasyPopulationSimulator.Console.Services
             npc.Traits.Add(traitEnum, trait);
         }
 
-        private bool TimeToDie(Npc npc, long today) => 
+        private bool TimeToDie(Npc npc, long today) =>
+            !npc.IsDead && 
             npc.AgeInDays >= npc.Race.DiesAtAge;
 
         private bool CanGiveBirthToday(Npc npc, long today) =>
-            npc.IsPregnant() && today >= npc.LastImpregnatedOn + npc.Race.PregnancyDurationInDays;
+            !npc.IsDead && 
+            npc.IsPregnant() && 
+            today >= npc.LastImpregnatedOn + npc.Race.PregnancyDurationInDays;
 
         private void Die(PopulationTracker pop, Npc npc)
         {
+            npc.IsDead = true;
             pop.Remove(npc);
         }
 
@@ -93,8 +98,10 @@ namespace FantasyPopulationSimulator.Console.Services
 
         private void GiveBirth(PopulationTracker pop, Npc mother, long day)
         {
+            if (mother.IsDead) return;
             ResetPregnancy(mother, day);
             pop.GenerateNewNpc(mother, null, day); //todo: determine who the father is?
+            mother.ChildrenCount++;
         }
 
         public void ResetPregnancy(Npc npc, long today)
@@ -105,10 +112,11 @@ namespace FantasyPopulationSimulator.Console.Services
 
         private bool CanGetPregnant(Npc npc, long today)   // todo: verify that a mate is nearby?
         {
-            return 
+            return
                 npc.Sex == Sex.Female &&
                 IsFertile(npc) &&
                 !npc.IsPregnant() &&
+                npc.ChildrenCount < 4 &&  // this should probably be affected by a fertility trait
                 npc.LastPregnancyEnded + npc.Race.TimeBetweenPregnancies <= today;
         }
 

@@ -1,6 +1,4 @@
 ﻿using FantasyPopulationSimulator.Console.Entities;
-using FantasyPopulationSimulator.Console.Interfaces;
-using FantasyPopulationSimulator.Console.Traits;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -34,15 +32,28 @@ namespace FantasyPopulationSimulator.Console.Services
             _travel.CompleteTravellerJourneys(day);
 
             var tasks = new List<Task>();
-            List<PopulationTracker> tickables = _worldState.GetAllTickables();
+            var tickables = _worldState.GetAllTickables();
             foreach (var child in tickables)
             {
-                child?.BlockUntilTickCompletes(day);
+                var task = Task.Run(() => RunInsideThread(child, day));
+                tasks.Add(task);
             }
 
             Task.WaitAll(tasks.ToArray());
+            //System.Console.Clear();
         }
 
+        public void RunInsideThread(PopulationTracker pop, long today)
+        {
+            //var zoneName = pop.GetAssignedZoneName();
+
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            pop.BlockUntilTickCompletes(today);
+            //stopwatch.Stop();
+
+            //System.Console.WriteLine($"Thread for {zoneName} for day {today} completed in {stopwatch.Elapsed} seconds.");
+        }
 
 
 

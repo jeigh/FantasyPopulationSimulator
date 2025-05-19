@@ -24,10 +24,10 @@ namespace FantasyPopulationSimulator.Console.Services
             _traits = traits;
         }
 
-        private List<Npc> Tickables { get; set; } = new List<Npc>();
+        private List<Npc> Npcs { get; set; } = new List<Npc>();
         private object tickableLock = new object();
 
-        public long NpcCount() => Tickables.Count;
+        public long NpcCount() => Npcs.Count;
 
         public void GenerateNewNpc(Npc mother, Npc? father, long day)
         {
@@ -47,10 +47,8 @@ namespace FantasyPopulationSimulator.Console.Services
             newNpc.BirthDate = day;
             lock(tickableLock)
             {
-                Tickables.Add(newNpc);
+                Npcs.Add(newNpc);
             }
-            
-            _ui.NpcBirth(mother.FirstName, newNpc.FirstName);
         }
 
         private Sex GenerateNewbornsBiologicalSex()
@@ -69,41 +67,49 @@ namespace FantasyPopulationSimulator.Console.Services
         {
             lock (tickableLock)
             {
-                if (Tickables.Count == 0) return;
-                Tickables.Remove(tickable);
+                if (Npcs.Count == 0) return;
+                Npcs.Remove(tickable);
             }
         }
 
         public void BlockUntilTickCompletes(long day)
         {
+            List<Npc> iterateOver;
             lock (tickableLock)
             {
-                foreach (Npc? child in Tickables.ToList())
-                {
-                    child?.BlockUntilTickCompletes(day);
-                }
+                 iterateOver = Npcs.ToList();
             }
+            foreach (Npc? child in iterateOver)
+            {
+                child?.BlockUntilTickCompletes(day);
+            }
+
         }
 
         public void Add(Npc tickable)
         {
             lock (tickableLock)
             {
-                Tickables.Add(tickable);
+                Npcs.Add(tickable);
             }
         }
 
         public long GetNpcCount()
         {
+            List<Npc> tickables = new List<Npc>();
             long sum = 0;
             lock (tickableLock)
             {
-                if (Tickables.Count == 0) return 0;
-                foreach (var child in Tickables.ToList())
-                {
-                    sum += child.GetNpcCount();
-                }
+                 tickables.AddRange(Npcs);
             }
+            if (tickables.Count == 0) return 0;
+            foreach (var child in tickables.ToList())
+            {
+                if (child == null) continue;
+                if (child.IsDead) continue;
+                sum += child.GetNpcCount();
+            }
+            
             return sum;
         }
         public string GetAssignedZoneName() => _assignedZone.ZoneName;

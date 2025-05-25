@@ -11,12 +11,12 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class WandererTrait : ITrait 
     {
         private RandomNumberGenerator _rand;
-        private MovementService _mover;
+        private WorldService _worldService;
 
-        public WandererTrait(RandomNumberGenerator rand, MovementService mover)
+        public WandererTrait(RandomNumberGenerator rand, WorldService worldService)
         {
             _rand = rand;
-            _mover = mover;
+            _worldService = worldService;
         }        
 
         public  TraitEnum Trait => TraitEnum.Wanderer;
@@ -36,8 +36,8 @@ namespace FantasyPopulationSimulator.Console.Traits
                     TravelEndDate = today + _rand.GenerateBetween(1, 7) // todo: create a distance attribute in the connection.
                 };
 
-                _mover.MoveNpcToTravellers(traveller);                
-
+                _worldService.MoveNpcToTravellers(traveller);                
+                
                 return false;
             }
             return true;            

@@ -7,18 +7,14 @@ namespace FantasyPopulationSimulator.Console.Entities
 
     public class Npc 
     {
-        private readonly NpcBehavior _behavior;
         private readonly Npc? _mother;
         private readonly Npc? _father;
-        private readonly PopulationTracker _tracker;
         
 
         public IDictionary<TraitEnum, ITrait> Traits = new Dictionary<TraitEnum, ITrait>();
 
-        public Npc(Npc mother, Npc? father, NpcBehavior behavior, PopulationTracker tracker, TraitCatalogue traits)
+        public Npc(Npc mother, Npc? father)
         {
-            _behavior = behavior;
-            _tracker = tracker;
 
             _mother = mother;
             _father = father;
@@ -29,11 +25,8 @@ namespace FantasyPopulationSimulator.Console.Entities
             CurrentZone = _mother.CurrentZone;    // todo: matrilineal or patrilineal zone?
         }
 
-        public Npc(IRace race, ICulture culture, IZone currentZone, NpcBehavior behavior, PopulationTracker tracker)
+        public Npc(IRace race, ICulture culture, IZone currentZone)
         {
-            _behavior = behavior;
-            _tracker = tracker;
-
             Race = race;
             Culture = culture;
             CurrentZone = currentZone;
@@ -62,10 +55,6 @@ namespace FantasyPopulationSimulator.Console.Entities
 
         public bool HasTrait(TraitEnum trait) => Traits.Any(t => t.Key == trait); 
         public long GetNpcCount() => 1;        
-
-        public void BlockUntilTickCompletes(long day) =>
-            _behavior.BlockUntilTickCompletes(_tracker, this, day);
-
     }
 
 }

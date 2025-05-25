@@ -17,17 +17,15 @@ namespace FantasyPopulationSimulator.Console.Services
         {
             services.AddSingleton(_ => new RandomNumberGenerator(12));
             services.AddSingleton<WorldState>();
-            services.AddSingleton<ZoneRetrievalService>();
-            services.AddSingleton<MovementService>();
-            services.AddSingleton<TraitCatalogue>();
             services.AddSingleton<NpcBehavior>();
             services.AddSingleton<TraitReplacementService>();
             services.AddSingleton<TravelService>();
             services.AddSingleton<WorldService>();
             services.AddSingleton<DisplayService>();
             services.AddSingleton<ZoneManagement>();
-            services.AddSingleton<TrackerFactory>();
             services.AddSingleton<InitialSetupHelper>();
+            services.AddSingleton<PopulationService>();
+            services.AddSingleton<NpcTraitService>();
             // traits
             services.AddSingleton<WandererTrait>();
             services.AddSingleton<SettlerTrait>();
@@ -85,6 +83,8 @@ namespace FantasyPopulationSimulator.Console.Services
 
             Zone edenZone = setup.CreateStartingZoneForEden(zones, "Eden", new Human(), new DefaultCulture(rand), string.Empty);
             Zone darkElfEden = setup.CreateStartingZoneForEden(zones, "Dark Elf Eden", new DarkElf(), new DarkElfCulture(rand), "DE_");
+
+            
 
             setup.SetupEverquestThemedZones(edenZone, darkElfEden);
 

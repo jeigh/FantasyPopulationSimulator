@@ -1,50 +1,88 @@
-﻿using FantasyPopulationSimulator.Console.Interfaces;
+﻿using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Interfaces;
 using FantasyPopulationSimulator.Console.Services;
+using FantasyPopulationSimulator.Console.Traits;
 
 namespace FantasyPopulationSimulator.Console.Entities
 {
     public class WorldState 
     {
-        private List<PopulationTracker> PopulationTrackers { get; set; } = new List<PopulationTracker>();
-        private object tickableLock = new object();
-
-        public List<PopulationTracker> GetAllTickables()
-        {
-            lock (tickableLock) 
-                return PopulationTrackers.ToList();
-        }
+        private List<Npc> _zonedNpcs { get; set; } = new List<Npc>();
+        private object npcsLock = new object();
 
         private List<Traveller> _travellers = new List<Traveller>();
         private object travellersLock = new object();
-        
+
+
         public int GetTravellerCount() => _travellers.Count;
 
         public void AddTraveller(Traveller traveller)
         {
             lock (travellersLock)
-            {
                 _travellers.Add(traveller);
-            }
         }
 
         public void RemoveTraveller(Traveller traveller)
         {
             lock (travellersLock)
-            {
                 _travellers.Remove(traveller);
-            }
         }
 
         public List<Traveller> GetAllTravellers()
         {
             lock (travellersLock)
-            {
                 return _travellers.ToList();
-            }
         }
 
-        public void Add(PopulationTracker tickable) => 
-            PopulationTrackers.Add(tickable);
+        public List<Npc> GetAllZonedNpcs()
+        {
+            lock (npcsLock)
+                return _zonedNpcs.ToList();
+        }
+
+        internal void RemoveZonedNpc(Npc travellerNpc)
+        {
+            lock (npcsLock)
+                _zonedNpcs.Remove(travellerNpc);
+        }
+
+        internal void AddZonedNpc(Npc newNpc)
+        {
+            lock(npcsLock)
+                _zonedNpcs.Add(newNpc);
+        }
+
+        public Dictionary<string, int> GetZonesPopulationCount()
+        {
+            var zones = new Dictionary<string, int>();
+            foreach(Npc npc in _zonedNpcs)
+            {
+                if (zones.ContainsKey(npc!.CurrentZone!.ZoneName))
+                    zones[npc.CurrentZone.ZoneName]++;
+                else
+                    zones.Add(npc.CurrentZone.ZoneName, 1);
+            }
+            return zones;
+        }
+
+
+
+        public Dictionary<TraitEnum, ITrait> Traits { get; set; } = new Dictionary<TraitEnum, ITrait>();
+
+        public ITrait GetTraitByEnum(TraitEnum trait)
+        {
+            if (Traits.TryGetValue(trait, out ITrait? value)) return value;
+            throw new ApplicationException($"Trait {trait} not found in catalogue.");
+        }
+
+
+
+
+
+
+
+
+
 
     }
 }

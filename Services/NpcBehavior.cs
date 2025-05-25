@@ -1,8 +1,6 @@
 ﻿using static FantasyPopulationSimulator.Console.Constants.GlobalConstants;
 using FantasyPopulationSimulator.Console.Constants;
-using FantasyPopulationSimulator.Console.Traits;
 using FantasyPopulationSimulator.Console.Entities;
-using FantasyPopulationSimulator.Console.Interfaces;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -10,23 +8,28 @@ namespace FantasyPopulationSimulator.Console.Services
     public class NpcBehavior
     {
         private readonly RandomNumberGenerator _rand;
-        private readonly TraitCatalogue _traits;
+        private readonly PopulationService _pop;
+        private readonly WorldState _worldState;
+        private readonly NpcTraitService _npcTraitSvc;
 
-        public NpcBehavior(RandomNumberGenerator rand, TraitCatalogue traits)
+
+        public NpcBehavior(RandomNumberGenerator rand,  PopulationService pop, WorldState worldState, NpcTraitService npcTraitSvc)
         {
             _rand = rand;
-            _traits = traits;
+            _pop = pop;
+            _worldState = worldState;
+            _npcTraitSvc = npcTraitSvc;
         }
 
         public int BirthDay(Npc npc) => 
             (int)(npc.BirthDate % DaysInYear);
 
-        public void BlockUntilTickCompletes(PopulationTracker pop, Npc npc, long today)
+        public void BlockUntilTickCompletes(Npc npc, long today)
         {
             if (npc.IsDead) return;
             if (TimeToDie(npc, today))
             {
-                Die(pop, npc);
+                Die(_pop, npc);
                 return;
             }
 
@@ -40,7 +43,7 @@ namespace FantasyPopulationSimulator.Console.Services
             }
 
             //if (BirthDay(npc) == today % DaysInYear) _ui.NpcBirthday();
-            if (CanGiveBirthToday(npc, today)) GiveBirth(pop, npc, today);
+            if (CanGiveBirthToday(npc, today)) GiveBirth(npc, today);
             if (CanGetPregnant(npc, today)) npc.LastImpregnatedOn = today;
             if (IsAdult(npc, today))
             {
@@ -49,21 +52,11 @@ namespace FantasyPopulationSimulator.Console.Services
                         !npc.HasTrait(TraitEnum.Settler) && 
                         !npc.HasTrait(TraitEnum.Wanderer) &&  
                         ProbabilityOfGettingANewTraitAtDay(npc.AgeInDays) >= _rand.GeneratePercentage()
-                    ) 
-                AddTraitToNpc(npc, TraitEnum.Wanderer);
+                    )
+                    _npcTraitSvc.AddTraitToNpc(npc, TraitEnum.Wanderer);
             }
 
             npc.AgeInDays++;
-        }
-
-        public void AddTraitToNpc(Npc npc, TraitEnum traitEnum)
-        {
-            if (npc.Traits.ContainsKey(traitEnum)) return;
-
-            ITrait trait = _traits.GetTraitByEnum(traitEnum);
-            if (trait == null) return;
-
-            npc.Traits.Add(traitEnum, trait);
         }
 
         private bool TimeToDie(Npc npc, long today) =>
@@ -75,10 +68,10 @@ namespace FantasyPopulationSimulator.Console.Services
             npc.IsPregnant() && 
             today >= npc.LastImpregnatedOn + npc.Race.PregnancyDurationInDays;
 
-        private void Die(PopulationTracker pop, Npc npc)
+        private void Die(PopulationService pop, Npc npc)
         {
             npc.IsDead = true;
-            pop.Remove(npc);
+            _worldState.RemoveZonedNpc(npc);
         }
 
         public bool IsFertile(Npc npc)
@@ -96,11 +89,11 @@ namespace FantasyPopulationSimulator.Console.Services
         public double ProbabilityOfGettingANewTraitAtDay(int ageInDays) =>
              0.00001f;   //small probability of occurring each day
 
-        private void GiveBirth(PopulationTracker pop, Npc mother, long day)
+        private void GiveBirth(Npc mother, long day)
         {
             if (mother.IsDead) return;
             ResetPregnancy(mother, day);
-            pop.GenerateNewNpc(mother, null, day); //todo: determine who the father is?
+            _pop.GenerateNewNpc(mother, null, day); //todo: determine who the father is?
             mother.ChildrenCount++;
         }
 
@@ -123,12 +116,8 @@ namespace FantasyPopulationSimulator.Console.Services
         public bool IsAdult(Npc npc, long today) =>
             npc.AgeInDays >= npc.Race.AdulthoodBeginsAt;
 
-        public void RemoveTraitFromNpc(Npc npc, TraitEnum trait)
-        {
-            npc.Traits.Remove(trait);
-        }
-    }
 
+    }
 }
 
 

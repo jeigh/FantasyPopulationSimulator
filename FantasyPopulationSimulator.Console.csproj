@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="adr\" />
+  </ItemGroup>
+
 </Project>

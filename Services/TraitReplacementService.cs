@@ -5,8 +5,8 @@ namespace FantasyPopulationSimulator.Console.Services
 {
     public class TraitReplacementService
     {
-        private readonly NpcBehavior _npcs;
-        public TraitReplacementService(NpcBehavior npcs)
+        private readonly NpcTraitService _npcs;
+        public TraitReplacementService(NpcTraitService npcs)
         {
             _npcs = npcs;
         }

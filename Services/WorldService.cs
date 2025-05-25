@@ -1,4 +1,7 @@
-﻿using FantasyPopulationSimulator.Console.Entities;
+﻿using FantasyPopulationSimulator.Console.Constants;
+using FantasyPopulationSimulator.Console.Entities;
+using FantasyPopulationSimulator.Console.Interfaces;
+using FantasyPopulationSimulator.Console.Traits;
 
 namespace FantasyPopulationSimulator.Console.Services
 {
@@ -7,55 +10,47 @@ namespace FantasyPopulationSimulator.Console.Services
 
     public class WorldService
     {
-        private TravelService _travel;
-        
+        private readonly TravelService _travel;
+        private readonly WorldState _worldState;
+        private readonly NpcBehavior _behavior;
 
 
-        public WorldService(TravelService travel)
+        public WorldService(TravelService travel, WorldState worldState, NpcBehavior behavior)
         {
             _travel = travel;
+            _worldState = worldState;
+            _behavior = behavior;
         }
 
         public long GetNpcCount(WorldState _worldState)
         {
             long sum = 0;
-            foreach (var zone in _worldState.GetAllTickables())
-            {
-                sum += zone.GetNpcCount();
-            }
+
+            sum += _worldState.GetAllZonedNpcs().Count;
             sum += _worldState.GetAllTravellers().Count;
+
             return sum;
         }
 
         public void BlockUntilTickCompletes(WorldState _worldState, long day)
         {
             _travel.CompleteTravellerJourneys(day);
-
-            var tasks = new List<Task>();
-            var tickables = _worldState.GetAllTickables();
-            foreach (var child in tickables)
+            foreach (Npc npc in _worldState.GetAllZonedNpcs())
             {
-                var task = Task.Run(() => RunInsideThread(child, day));
-                tasks.Add(task);
+                _behavior.BlockUntilTickCompletes(npc, day);
             }
 
-            Task.WaitAll(tasks.ToArray());
-            //System.Console.Clear();
+
         }
 
-        public void RunInsideThread(PopulationTracker pop, long today)
+        public void MoveNpcToTravellers(Traveller traveller)
         {
-            //var zoneName = pop.GetAssignedZoneName();
+            string sourceZoneName = traveller!.TravellerNpc!.CurrentZone!.ZoneName;
 
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            pop.BlockUntilTickCompletes(today);
-            //stopwatch.Stop();
-
-            //System.Console.WriteLine($"Thread for {zoneName} for day {today} completed in {stopwatch.Elapsed} seconds.");
+            _worldState.RemoveZonedNpc(traveller!.TravellerNpc);
+            _worldState.AddTraveller(traveller);
+            
         }
-
-
 
 
     }

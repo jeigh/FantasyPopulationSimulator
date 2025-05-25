@@ -17,33 +17,19 @@ namespace FantasyPopulationSimulator.Console.Services
         {
             var totalNpcCount = _worldService.GetNpcCount(_worldState);
             System.Console.WriteLine($"Year: {currentYear}, Total Npc Count: {totalNpcCount}");
-            foreach(var childPop in _worldState.GetAllTickables())
+            Dictionary<string, int> zonePopulationCounts = _worldState.GetZonesPopulationCount();
+
+            foreach (KeyValuePair<string, int> kvp in zonePopulationCounts)
             {
-                var zoneNpcCount = childPop.GetNpcCount();
-                System.Console.WriteLine($"Zone: {childPop.GetAssignedZoneName()}, Npc Count: {zoneNpcCount}");
+                System.Console.WriteLine($"Zone: {kvp.Key}, Npc Count: {kvp.Value}");
             }
+
+
             var travellerCount = _worldState.GetTravellerCount();
             System.Console.WriteLine($"Total Travellers: {travellerCount}");
         }
 
         public void Clear() => System.Console.Clear();
-
-        public void DeclareYear(int currentYear, long npcCount) => System.Console.WriteLine($"Year: {currentYear}, NpcCount: {npcCount}");
-
-        public void NpcBirth(string firstName1, string firstName2)
-        {
-            return;
-        }
-
-        internal void NpcBirthday()
-        {
-            return;
-        }
-
-        internal void NpcDeath()
-        {
-            return;
-        }
     }
 }
 

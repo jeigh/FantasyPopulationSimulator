@@ -88,20 +88,20 @@ namespace FantasyPopulationSimulator.Console.Services
 
             setup.SetupEverquestThemedZones(edenZone, darkElfEden);
 
-            long day = 0;
+            worldState.CurrentDate = 0;
             while (true)
             {
-                if (day % DaysInYear == 0)
+                if (worldState.CurrentDate % DaysInYear == 0)
                 {
-                    int currentYear = (int)(day / DaysInYear);
+                    int currentYear = (int)(worldState.CurrentDate / DaysInYear);
                     ui.Clear();
 
-                    if (day % DaysInYear == 0) ui.EmitSummary(currentYear);
+                    if (worldState.CurrentDate % DaysInYear == 0) ui.EmitSummary(currentYear);
                 }
 
-                worldService.BlockUntilTickCompletes(worldState, day);
-
-                day++;
+                worldService.BlockUntilTickCompletes(worldState);
+                
+                worldState.CurrentDate = worldState.CurrentDate + 1;
             }
         }
     }

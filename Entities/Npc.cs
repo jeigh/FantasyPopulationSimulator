@@ -36,7 +36,6 @@ namespace FantasyPopulationSimulator.Console.Entities
         public IRace Race { get; private set; }
         public string FirstName { get; set; } = string.Empty;
         public string? LastName { get; set; } // todo: make last name not nullable
-        public int AgeInDays { get; set; } = 0;
         public Sex Sex { get; set; } = Sex.None;        
         public IZone? CurrentZone { get; set; }
         public long BirthDate { get; set; } = 0;

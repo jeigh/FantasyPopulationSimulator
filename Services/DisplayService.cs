@@ -19,7 +19,7 @@ namespace FantasyPopulationSimulator.Console.Services
             System.Console.WriteLine($"Year: {currentYear}, Total Npc Count: {totalNpcCount}");
             Dictionary<string, int> zonePopulationCounts = _worldState.GetZonesPopulationCount();
 
-            foreach (KeyValuePair<string, int> kvp in zonePopulationCounts)
+            foreach (KeyValuePair<string, int> kvp in zonePopulationCounts) 
             {
                 System.Console.WriteLine($"Zone: {kvp.Key}, Npc Count: {kvp.Value}");
             }

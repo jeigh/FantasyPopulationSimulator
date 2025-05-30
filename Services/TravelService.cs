@@ -13,13 +13,13 @@ namespace FantasyPopulationSimulator.Console.Services
             _worldState = worldState;
         }
 
-        public void CompleteTravellerJourneys(long today)
+        public void CompleteTravellerJourneys()
         {
             var completedTravellers = (from trav in _worldState.GetAllTravellers() select trav).ToList();
             foreach (Traveller traveller in completedTravellers)
             {
                 if (traveller.Destination == null) continue;
-                if (traveller.TravelEndDate > today) continue;
+                if (traveller.TravelEndDate > _worldState.CurrentDate) continue;
 
                 // 'twould be nice to be able to stick these following ops in a transaction so they can be rolled back as a group
                 traveller!.TravellerNpc!.CurrentZone = traveller.Destination;

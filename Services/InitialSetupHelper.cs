@@ -49,7 +49,6 @@ namespace FantasyPopulationSimulator.Console.Services
             var adam = new Npc(race, culture, currentZone);
 
             adam.FirstName = name;
-            adam.AgeInDays = 16 * DaysInYear;
             adam.BirthDate = -16 * DaysInYear + 36;
             adam.Sex = Sex.Male;
 
@@ -62,7 +61,6 @@ namespace FantasyPopulationSimulator.Console.Services
             var eve = new Npc(race, culture, currentZone);
 
             eve.FirstName = name;
-            eve.AgeInDays = 16 * DaysInYear;
             eve.BirthDate = -16 * DaysInYear + 17;
             eve.Sex = Sex.Female;
             

@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class ContentTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Content;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

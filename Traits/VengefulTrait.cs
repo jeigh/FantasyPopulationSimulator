@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class VengefulTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Vengeful;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

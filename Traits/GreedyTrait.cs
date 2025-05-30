@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class GreedyTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Greedy;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

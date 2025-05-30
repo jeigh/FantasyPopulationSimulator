@@ -7,6 +7,8 @@ namespace FantasyPopulationSimulator.Console.Entities
 {
     public class WorldState 
     {
+        public long CurrentDate { get; set; } = 0;
+
         private List<Npc> _zonedNpcs { get; set; } = new List<Npc>();
         private object npcsLock = new object();
 
@@ -68,21 +70,23 @@ namespace FantasyPopulationSimulator.Console.Entities
 
 
         public Dictionary<TraitEnum, ITrait> Traits { get; set; } = new Dictionary<TraitEnum, ITrait>();
-
+        
         public ITrait GetTraitByEnum(TraitEnum trait)
         {
             if (Traits.TryGetValue(trait, out ITrait? value)) return value;
             throw new ApplicationException($"Trait {trait} not found in catalogue.");
         }
 
-
-
-
-
-
-
-
-
-
+        internal void RemoveNpcTraveller(Npc npc)
+        {
+            lock (travellersLock)
+            {
+                var traveller = _travellers.FirstOrDefault(t => t.TravellerNpc == npc);
+                if (traveller != null)
+                {
+                    _travellers.Remove(traveller);
+                }
+            }
+        }
     }
 }

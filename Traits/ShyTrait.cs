@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class ShyTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Shy;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

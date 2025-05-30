@@ -12,18 +12,20 @@ namespace FantasyPopulationSimulator.Console.Traits
     {
         private RandomNumberGenerator _rand;
         private WorldService _worldService;
+        private WorldState _worldState;
 
-        public WandererTrait(RandomNumberGenerator rand, WorldService worldService)
+        public WandererTrait(RandomNumberGenerator rand, WorldService worldService, WorldState worldState)
         {
             _rand = rand;
             _worldService = worldService;
+            _worldState = worldState;
         }        
 
         public  TraitEnum Trait => TraitEnum.Wanderer;
-        public bool ProcessTickAndContinue(Npc npc, long today)
+        public bool ProcessTickAndContinue(Npc npc)
         {
-            // 25% that the wanderer will move to a new zone
-            if (0.25f >= _rand.GeneratePercentage())
+            // 0.1% that are wanderers will move to a new zone each day
+            if (0.001f >= _rand.GeneratePercentage())
             {
                 List<IZone> potentialDestinations = npc.CurrentZone!.GetTargetZoneConnections();
                 IZone destination = potentialDestinations[_rand.GenerateBetween(0, potentialDestinations.Count - 1)];
@@ -32,13 +34,13 @@ namespace FantasyPopulationSimulator.Console.Traits
                 {
                     TravellerNpc = npc,
                     Destination = destination,
-                    TravelStartDate = today,
-                    TravelEndDate = today + _rand.GenerateBetween(1, 7) // todo: create a distance attribute in the connection.
+                    TravelStartDate = _worldState.CurrentDate,
+                    TravelEndDate = _worldState.CurrentDate + _rand.GenerateBetween(1, 7) // todo: create a distance attribute in the connection.
                 };
 
                 _worldService.MoveNpcToTravellers(traveller);                
                 
-                return false;
+                return false; 
             }
             return true;            
         }

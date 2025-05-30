@@ -15,7 +15,7 @@ namespace FantasyPopulationSimulator.Console.Services
             _worldState = worldState;
         }        
 
-        public void GenerateNewNpc(Npc mother, Npc? father, long day)
+        public void GenerateNewNpc(Npc mother, Npc? father)
         {
             var newNpc = new Npc(mother, father);
 
@@ -29,8 +29,7 @@ namespace FantasyPopulationSimulator.Console.Services
             newNpc.FirstName = newName;
             
             newNpc.LastName = father?.LastName;                 //todo: better last name generation;  and culture = matrilineal vs patrilineal?
-            newNpc.AgeInDays = 0;
-            newNpc.BirthDate = day;
+            newNpc.BirthDate = _worldState.CurrentDate;
 
             _worldState.AddZonedNpc(newNpc);
         }

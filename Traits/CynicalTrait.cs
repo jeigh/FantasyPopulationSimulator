@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class CynicalTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Cynical;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

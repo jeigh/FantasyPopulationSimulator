@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class ParanoidTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Paranoid;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

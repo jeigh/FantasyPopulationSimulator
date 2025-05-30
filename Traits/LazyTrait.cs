@@ -7,6 +7,6 @@ namespace FantasyPopulationSimulator.Console.Traits
     public class LazyTrait : ITrait
     {
         public  TraitEnum Trait => TraitEnum.Lazy;
-        public bool ProcessTickAndContinue(Npc npc, long today) => true;
+        public bool ProcessTickAndContinue(Npc npc) => true;
     }
 }

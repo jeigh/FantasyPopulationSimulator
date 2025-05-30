@@ -5,11 +5,9 @@ namespace FantasyPopulationSimulator.Console.Interfaces
 {
     public interface ITrait
     {
-        bool ProcessTickAndContinue(Npc npc, long today);  // true if continue, false if NPC should not be processed anymore for this tick.
+        bool ProcessTickAndContinue(Npc npc);  // true if continue, false if NPC should not be processed anymore for this tick.
         
         TraitEnum Trait { get; }
-
-        //List<string> Opposites { get; set; }
     }
 
 }
